@@ -12,7 +12,7 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 const JWT_SECRET = process.env.JWT_SECRET || 'secret';
 const corsOptions = {
-    origin: ['http://localhost:5173', 'https://challenge-each-implode.ngrok-free.dev'],
+    origin: ['http://localhost:5173', 'https://challenge-each-implode.ngrok-free.dev', process.env.HOST],
     credentials:true
 };
 
@@ -113,7 +113,9 @@ app.post('/users', async (req,res) => {
              VALUES ($1, $2, $3, $4) RETURNING *`,
              [username, email, age, encryptPassword]
         );
-        const token = jwt.sign({id: result.rows[0].user_id, username: result.rows[0].username}, JWT_SECRET, {expiresIn: '1h'});
+        const user = result.rows[0];
+        console.log(user);
+        const token = jwt.sign({id: user.id ? user.id : user.user_id, username: result.rows[0].username}, JWT_SECRET, {expiresIn: '1h'});
         res.status(201).json({token});
     } catch (error) {
         console.error('Error creating user', error.stack);
@@ -131,12 +133,14 @@ app.post('/login', async (req,res) =>{
             return res.status(400).json({error: 'User not found'});
         }
         const user = result.rows[0];
+        console.log(user);
         const validPassword = await bcrypt.compare(password, user.password);
         if (!validPassword) {
             return res.status(401).json({error: 'Invalid credentials'});
         }
 
-        const token = jwt.sign({id: user.user_id, username: user.username}, JWT_SECRET, {expiresIn: '1h'});
+        const token = jwt.sign({id: user.id ? user.id : user.user_id, username: user.username}, JWT_SECRET, {expiresIn: '1h'});
+        console.log(token)
         res.status(200).json({token});
 
     } catch (error) {
@@ -285,6 +289,7 @@ app.post('/task', authenticateToken, async (req, res) =>{
             created_by, 
             owner_id,
         } = req.body;
+        console.log(created_by);
     let task_status = req.body.task_status !== '' ? req.body.task_status : 'Not started'
     let category = req.body.category !== "" ? req.body.category : "General";
     try {

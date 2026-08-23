@@ -44,9 +44,12 @@ const FriendTaskList = (({friend}) => {
             : ([...taskList].sort( (a,b) => a.category.localeCompare(b.category)))
                 .filter(t => (selectedStatus === 'All' || t.task_status === selectedStatus));
 
-    const host = import.meta.env.VITE_HOST || 'localhost';
-    const port = import.meta.env.VITE_PORT || 8000;
-
+  const host = import.meta.env.VITE_BACKEND 
+  || 
+    import.meta.env.VITE_HOST 
+    || 
+      `http://localhost:8123`;
+      
     const handleTaskCreate = async (e) => {
         e.preventDefault();
         const requestOptions = {
@@ -58,7 +61,7 @@ const FriendTaskList = (({friend}) => {
             body : JSON.stringify(task)
         }
         try {
-            const response = await fetch(`http://${host}:${port}/task`, requestOptions);
+            const response = await fetch(`${host || 'http://localhost:8123'}/task`, requestOptions);
             if (!response.ok) {
                 const data = await response.json();
                 throw new Error(data.message || 'Error creating new task.')
@@ -94,7 +97,7 @@ const FriendTaskList = (({friend}) => {
             }
         };
         try {
-            const response = await fetch(`http://${host || 'localhost'}:${port}/task/${tas.task_id}`, requestOptions);
+            const response = await fetch(`${host || 'http://localhost:8123'}/task/${tas.task_id}`, requestOptions);
             if (!response.ok)
             {
                 const data = await response.json();

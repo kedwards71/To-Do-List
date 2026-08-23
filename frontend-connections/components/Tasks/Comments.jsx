@@ -24,9 +24,12 @@ const Comments = ({selectedTask,showComments,setShowComments}) => {
     const filteredComments = 
         commentList.filter((c) => (selectedTask.task_id === c.task_id));
 
-    const host = import.meta.env.VITE_HOST || 'localhost';
-    const port = import.meta.env.VITE_PORT || 8000;
-
+  const host = import.meta.env.VITE_BACKEND 
+  || 
+    import.meta.env.VITE_HOST 
+    || 
+      `http://localhost:8123`;
+      
     //Create a comment
     const handleCommentCreate = async (e) => {
         e.preventDefault();
@@ -45,7 +48,7 @@ const Comments = ({selectedTask,showComments,setShowComments}) => {
         };
 
         try {
-            const response = await fetch(`http://${host || 'localhost'}:${port}/task/${payload.task_id}/comment`, requestOptions);
+            const response = await fetch(`${host || 'http://localhost:8123'}/task/${payload.task_id}/comment`, requestOptions);
             if (!response.ok){
                 const data = await response.json();
                 throw new Error(data.message || 'Error creating comment');
@@ -87,7 +90,7 @@ const Comments = ({selectedTask,showComments,setShowComments}) => {
             }
         }
         try {
-            const response = await fetch(`http://${host || 'localhost'}:${port}/task/comment/${comm.comment_id}`, requestOptions);
+            const response = await fetch(`${host || 'http://localhost:8123'}/task/comment/${comm.comment_id}`, requestOptions);
             if (!response.ok){
                 const data = await response.json();
                 throw new Error(data.message || 'Error deleting comment');
@@ -110,7 +113,7 @@ const Comments = ({selectedTask,showComments,setShowComments}) => {
         }
         
         try {
-            const response = await fetch(`http://${host || 'localhost'}:${port}/task/${tas.task_id}/comment`, requestOptions);
+            const response = await fetch(`${host || 'http://localhost:8123'}/task/${tas.task_id}/comment`, requestOptions);
             if (!response.ok){
                 const data = await response.json();
                 throw new Error(data.message || 'Error fetching comments');

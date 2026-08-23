@@ -48,10 +48,12 @@ const Tasks = () => {
     taskList.filter(t => (t.category === category) && ((selectedStatus === 'All' && t.task_status !=='Pending') || t.task_status === selectedStatus)) 
     : ([...taskList].sort((a,b) => a.category.localeCompare(b.category)))
     .filter(t => (selectedStatus === 'All' || t.task_status === selectedStatus));
-
-    const host = import.meta.env.VITE_HOST || 'localhost';
-    const port = import.meta.env.VITE_PORT || 8000;
-
+  
+    const host = import.meta.env.VITE_BACKEND 
+  || 
+    import.meta.env.VITE_HOST 
+    || 
+      `http://localhost:8123`;
 
     //Delete all tasks in a category
     const removeCategory =  async (cat) => {
@@ -63,7 +65,7 @@ const Tasks = () => {
             }
         }
         try {
-            const response = await fetch(`http://${host || 'localhost'}:${port}/task?category=${cat}`,requestOptions);
+            const response = await fetch(`${host || 'http://localhost:8123'}/task?category=${cat}`,requestOptions);
             if (!response.ok)
             {
                 const data = await response.json();
@@ -82,21 +84,36 @@ const Tasks = () => {
     // Create a task
     const handleTaskCreate =  async (event) => {
         event.preventDefault();
+        const user = JSON.parse(sessionStorage.getItem('token'));
+        alert(user.id)
+        const payload = {
+            "task_title" : task.task_title,
+            "task_description" : task.task_description,
+            "created_by" : user.id,
+            "owner_id" : user.id,
+            "category" : task.category,
+            "task_status" : task.task_status,
+            "task_id" : 0,
+            "created_at" : new Date(),
+            "updated_at" : new Date()
+        }
         setTask({
             ...task,
             "created_by": userInfo.user_id,
             "owner_id" : userInfo.user_id
         });
+        alert(user.id)
+        alert(JSON.stringify(payload,null,4));
         const requestOptions = {
             method: 'POST',
             headers: {
                 "Content-Type" : "application/json",
                 "Authorization" : `Bearer ${sessionStorage.getItem("Bearer")}`
             },
-            body: JSON.stringify(task)
+            body: JSON.stringify(payload)
         };
         try{
-            const response = await fetch(`http://${host || 'localhost' }:${port}/task`,requestOptions);
+            const response = await fetch(`${host || 'http://localhost:8123'}/task`,requestOptions);
             if (!response.ok)
             {
                 const data = await response.json();
@@ -136,7 +153,7 @@ const Tasks = () => {
             body : JSON.stringify(tas)
         }
         try {
-            const response = await fetch(`http://${ host||'localhost'}:${port}/task/accept/${tas.task_id}`, requestOptions);
+            const response = await fetch(`${host || 'http://localhost:8123'}/task/accept/${tas.task_id}`, requestOptions);
             if (!response.ok){
                 const data = await response.json();
                 throw new Error(data.message || 'Failure acceptiing task');
@@ -161,7 +178,7 @@ const Tasks = () => {
             }
         };
         try {
-            const response = await fetch(`http://${host || 'localhost'}:${port}/task/${tas.task_id}`, requestOptions);
+            const response = await fetch(`${host || 'http://localhost:8123'}/task/${tas.task_id}`, requestOptions);
             if (!response.ok)
             {
                 const data = await response.json();
@@ -186,7 +203,7 @@ const Tasks = () => {
             body: JSON.stringify(selectedTask)
         }
         try {
-            const response = await fetch(`http://${host || 'localhost'}:${port}/task/${selectedTask.task_id}`,requestOptions);
+            const response = await fetch(`${host || 'http://localhost:8123'}/task/${selectedTask.task_id}`,requestOptions);
             if (!response.ok){
                 const data = await response.json();
                 throw new Error(data.message || 'Failure to Update task');
@@ -228,7 +245,7 @@ const Tasks = () => {
             }
         };
         try{
-            const response = await fetch(`http://${host || 'localhost'}:${port}/task?user=${user.id}`, requestOptions);
+            const response = await fetch(`${host || 'http://localhost:8123'}/task?user=${user.id}`, requestOptions);
             if (!response.ok)
             {
                 const data = await response.json();

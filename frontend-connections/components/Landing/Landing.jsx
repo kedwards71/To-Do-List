@@ -15,8 +15,11 @@ const Landing = () =>{
     "password" : ""
   });
 
-  const host = import.meta.env.VITE_HOST || 'localhost';
-  const port = import.meta.env.VITE_PORT || 8000;
+  const host = import.meta.env.VITE_BACKEND 
+  || 
+    import.meta.env.VITE_HOST 
+    || 
+      `http://localhost:8123`;
   const navigate = useNavigate();
 
   const handleSubmit = async (event) =>{
@@ -28,7 +31,7 @@ const Landing = () =>{
     };
 
     try {
-      const response = await fetch(`http://${host || 'localhost'}:${port}/${!isRegister ? 'login' : 'users'}`, requestOptions);
+      const response = await fetch(`${host || 'http://localhost:8123'}/${!isRegister ? 'login' : 'users'}`, requestOptions);
       const data = await response.json();
       if (!response.ok)
         throw new Error(data.message || "Authentication failed");
@@ -65,7 +68,7 @@ const Landing = () =>{
       body: JSON.stringify(payload)
     }
     try {
-      const response = await fetch(`http://${host || 'localhost' }:${port}/${'users'}`, requestOptions);
+      const response = await fetch(`${host || 'http://localhost:8123'}/${'users'}`, requestOptions);
       const data = await response.json();
       if (!response.ok)
         throw new Error(data.message || "Authentication failed");

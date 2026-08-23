@@ -26,8 +26,12 @@ const Friends = () => {
 
     const [showUpdateDisplay, setShowUpdateDisplay] = useState(false);
 
-    const host = import.meta.env.VITE_HOST || 'localhost';
-    const port = import.meta.env.VITE_PORT || 8000;
+    const host = import.meta.env.VITE_BACKEND 
+    || 
+        import.meta.env.VITE_HOST 
+        || 
+        `http://localhost:8123`;
+
     // Filter friends by status
     const filteredFriends =
         selectedFriendStatus === 'Mutual' ? friendsList.filter(f => ((f.user_accept === true) &&(f.friend_accept === true))) 
@@ -68,7 +72,7 @@ const Friends = () => {
         };
 
         try {
-            const response = await fetch(`http://${host || 'localhost'}:${port}/friend`,requestOptions);
+            const response = await fetch(`${host || 'http://localhost:8123'}/friend`,requestOptions);
             if (!response.ok){
                 const data = await response.json();
                 if(response.status === 409){
@@ -97,7 +101,7 @@ const Friends = () => {
             body : JSON.stringify(payload)
         };
         try {
-            const response = await fetch(`http://${host || 'localhost'}:${port}/friend/accept`,requestOptions);
+            const response = await fetch(`${host || 'http://localhost:8123'}/friend/accept`,requestOptions);
             if (!response.ok){
                 const data = await response.json();
                 throw new Error(data.message || 'Error accepting friend request.')
@@ -128,7 +132,7 @@ const Friends = () => {
         };
 
         try {
-            const response = await fetch(`http://${host || 'localhost'}:${port}/friend/${friend.friend_id}`, requestOptions)
+            const response = await fetch(`${host || 'http://localhost:8123'}/friend/${friend.friend_id}`, requestOptions)
             if (!response.ok){
                 const data = await response.json();
                 throw new Error(data.message || 'Error updating display name');
@@ -156,7 +160,7 @@ const Friends = () => {
             }
         };
         try {
-            const response = await fetch(`http://${host || 'localhost'}:${port}/friend/${frie.friend_id}`, requestOptions)
+            const response = await fetch(`${host || 'http://localhost:8123'}/friend/${frie.friend_id}`, requestOptions)
             if (!response.ok){
                 const data = await response.json();
                 throw new Error(data.message || 'Failed to remove friend');
@@ -180,7 +184,7 @@ const Friends = () => {
             }
         }
         try {
-            const response = await fetch(`http://${host || 'localhost'}:${port}/friend`, requestOptions)
+            const response = await fetch(`${host || 'http://localhost:8123'}/friend`, requestOptions)
             if (!response.ok){
                 const data = await response.json();
                 throw new Error(data.message || 'Error retrieving friend list');
