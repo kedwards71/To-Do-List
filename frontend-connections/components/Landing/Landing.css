@@ -1,0 +1,83 @@
+.landing-page{
+    background-image : 
+    linear-gradient(135deg, rgba(220,81,255,.3), rgba(211, 37, 255, .5)),
+    url('../../src/assets/livelyC.jpg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover, cover;
+    color:white;
+    display:flex; 
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.auth-card{
+    border: 1px solid black;
+    min-height: 75%;
+    width: 100%;
+    max-width: 1000px;
+    border-radius: 25px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    display: flex;
+    overflow: hidden;
+}
+
+.auth-card.register{
+    flex-direction: row;
+}
+
+.auth-card.login{
+    flex-direction: row-reverse;
+}
+
+
+.auth-form{
+    box-sizing: border-box;
+    width:50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    background: rgba(152, 42, 241, 0.3);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+}
+.guest-section{
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+}
+
+.login-form h2{
+    margin-right: 4em;
+}
+@media (max-width: 768px) {
+    .auth-card.register,.auth-card.login{
+        flex-direction: column;
+    }
+    .auth-form{
+        width: 100%;
+        min-height:auto;
+    }
+    .auth-form h2{
+        margin-right: 0;
+        text-align: center;
+    }
+    .guest-section{
+        margin-top: 10%;
+        width: 100%;
+        min-height: auto;
+    }
+}
+
+
+
+
+

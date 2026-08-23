@@ -1,0 +1,59 @@
+.btn-add-task, .btn-friend-add, .btn-comment-add{
+    cursor: pointer;
+    margin-left: 20px;
+    color: green;
+}
+
+.btn-task-add{
+    margin-left: 20px;
+}
+
+.task-form-body, .friend-form-body, .comment-form-body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.comment-form-body .form-group{
+    width: 100%;
+    height: 100%;
+}
+
+.comment-form-body textarea{
+    width:100%;
+    height:100%;
+}
+
+.btn-remove-task, .btn-friend-remove{
+    cursor: pointer;
+    margin-left: 20px;
+    color: red;
+}
+
+.btn-edit-task, .btn-friend-edit {
+    cursor: pointer;
+    margin-left: 20px;
+    color: blue;
+}
+
+.accept-friend {
+    margin-left: 20px;
+}
+
+.btn-comment-task, .btn-friend-tasks {
+    cursor: pointer;
+    margin-left: 20px;
+    color: purple;
+}
+
+.todo-tasks,.todo-categories{
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.task-container{
+    width: 100%;
+    height: 100%;
+}
+
