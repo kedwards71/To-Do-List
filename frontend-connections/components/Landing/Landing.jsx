@@ -61,7 +61,7 @@ const Landing = () =>{
     }
   }
 
-  const guestGeneration = async () => {
+  const guestGeneration = async (event) => {
     event.preventDefault();
     const guest = generateGuestCredentials();
     const payload = {
