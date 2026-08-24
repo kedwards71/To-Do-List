@@ -1,7 +1,13 @@
-CREATE DATABASE lively_connections;
+CREATE OR REPLACE FUNCTION update_timestamp()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = CURRENT_TIMESTAMP;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
 CREATE TABLE users (
-    id INT SERIAL PRIMARY KEY,
+    user_id SERIAL PRIMARY KEY,
     username VARCHAR(50) NOT NULL ,
     email VARCHAR(100) NOT NULL UNIQUE,
     age INT NOT NULL,
@@ -9,7 +15,7 @@ CREATE TABLE users (
 );
 
 CREATE TABLE tasks (
-    task_id INT SERIAL PRIMARY KEY,
+    task_id SERIAL PRIMARY KEY,
     task_title VARCHAR(255) NOT NULL,
     task_description VARCHAR(255),
     task_status VARCHAR(50) NOT NULL DEFAULT 'Not Started',
@@ -20,14 +26,19 @@ CREATE TABLE tasks (
     acceptance BOOLEAN DEFAULT false,
     category VARCHAR(50),
 
-    FOREIGN KEY (owner_id) REFERENCES users(id)
+    FOREIGN KEY (owner_id) REFERENCES users(user_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
     
-    FOREIGN KEY (created_by) REFERENCES users(id)
+    FOREIGN KEY (created_by) REFERENCES users(user_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
+
+CREATE TRIGGER set_timestamp_tasks
+BEFORE UPDATE ON tasks
+FOR EACH ROW
+EXECUTE FUNCTION update_timestamp();
 
 CREATE TABLE friend_list (
     user_id INT NOT NULL,
@@ -39,18 +50,18 @@ CREATE TABLE friend_list (
 
     PRIMARY KEY(user_id,friend_id),
 
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
 
-    FOREIGN KEY (friend_id) REFERENCES users(id)
+    FOREIGN KEY (friend_id) REFERENCES users(user_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE
 
 );
 
 CREATE TABLE task_comments (
-    comment_id INT SERIAL PRIMARY KEY,
+    comment_id SERIAL PRIMARY KEY,
     task_id INT NOT NULL,
     commenter_id INT NOT NULL,
     task_comment TEXT NOT NULL,
@@ -61,7 +72,12 @@ CREATE TABLE task_comments (
         ON UPDATE CASCADE
         ON DELETE CASCADE,
     
-    FOREIGN KEY (commenter_id) REFERENCES users(id)
+    FOREIGN KEY (commenter_id) REFERENCES users(user_id)
         ON UPDATE CASCADE
-        ON DELETE CASCADE,
+        ON DELETE CASCADE
 );
+
+-- drop table task_comments;
+-- drop table friend_list;
+-- drop table tasks;
+-- drop table users;
