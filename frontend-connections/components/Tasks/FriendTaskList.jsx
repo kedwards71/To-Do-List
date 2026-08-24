@@ -120,7 +120,7 @@ const FriendTaskList = (({friend}) => {
             }
         };
         try{
-            const response = await fetch(`http://${host  || 'localhost'}:${port}/friend/tasks/${friend.friend_id}`,requestOptions)
+            const response = await fetch(`${host || 'http://localhost:8123'}/friend/tasks/${friend.friend_id}`,requestOptions)
             if (!response.ok){
                 const data = await response.json();
                 throw new Error(data.message || 'Failure retrieving tasks.')

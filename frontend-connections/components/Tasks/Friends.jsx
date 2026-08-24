@@ -61,7 +61,7 @@ const Friends = () => {
             'friend_id' : 0,
             'display_name' : ''
         });
-
+        console.log(payload)
         const requestOptions = {
             method : "POST",
             headers : {

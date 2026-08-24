@@ -48,7 +48,6 @@ const Landing = () =>{
         });
         navigate('/tasks');
     } catch(error) {
-      alert(JSON.stringify(error))
       console.error('Error:', error);
     }
   }

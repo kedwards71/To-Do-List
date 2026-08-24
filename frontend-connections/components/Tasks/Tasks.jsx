@@ -85,7 +85,6 @@ const Tasks = () => {
     const handleTaskCreate =  async (event) => {
         event.preventDefault();
         const user = JSON.parse(sessionStorage.getItem('token'));
-        alert(user.id)
         const payload = {
             "task_title" : task.task_title,
             "task_description" : task.task_description,
@@ -102,8 +101,6 @@ const Tasks = () => {
             "created_by": userInfo.user_id,
             "owner_id" : userInfo.user_id
         });
-        alert(user.id)
-        alert(JSON.stringify(payload,null,4));
         const requestOptions = {
             method: 'POST',
             headers: {
