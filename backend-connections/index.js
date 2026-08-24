@@ -10,7 +10,7 @@ import authRouter from './routes/login.js';
 const app = express();
 const PORT = process.env.PORT || 8000;
 const corsOptions = {
-    origin: ['http://localhost:5173', 'https://challenge-each-implode.ngrok-free.dev', process.env.HOST],
+    origin: ['http://localhost:5173', process.env.FRONTEND, process.env.HOST],
     credentials:true
 };
 
