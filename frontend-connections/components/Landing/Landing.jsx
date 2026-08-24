@@ -32,6 +32,14 @@ const Landing = () =>{
 
     try {
       const response = await fetch(`${host || 'http://localhost:8123'}/${!isRegister ? 'login' : 'users'}`, requestOptions);
+<<<<<<< HEAD
+=======
+      if (!response.ok){
+        const data = await response.json();
+
+        throw new Error(data.message || "Authentication failed");
+      }
+>>>>>>> 3b394f2 (removed video)
       const data = await response.json();
       if (!response.ok)
         throw new Error(data.message || "Authentication failed");
@@ -48,6 +56,10 @@ const Landing = () =>{
         });
         navigate('/tasks');
     } catch(error) {
+        if (!isRegister)
+          alert('Invalid Credentials');
+        else
+          alert('Username/Email already in use');
       console.error('Error:', error);
     }
   }
