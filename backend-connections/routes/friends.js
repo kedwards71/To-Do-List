@@ -143,7 +143,7 @@ router.get('/tasks/:id', authenticateToken, async (req,res) => {
     
     try {
         const result = await pool.query(
-            `SELECT * FROM tasks WHERE user_id = $1 `,[req.params.id]
+            `SELECT * FROM tasks WHERE owner_id = $1 `,[req.params.id]
         );
         if (result.rows.length === 0)
         {
