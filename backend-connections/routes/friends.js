@@ -138,4 +138,18 @@ router.put('/:id', authenticateToken, async (req, res) => {
     }
 });
 
+//Retrieve Friends Tasks
+router.get('/tasks/:id', authenticateToken, async (req,res) => {
+    try {
+        const result = await pool.query(
+            `SELECT * FROM tasks WHERE user_id = $1 `,[req.params.id]
+        );
+        res.status(201).send(result.rows);
+
+    } catch (error) {
+        console.error('Error fetching friends tasks', error.stack);
+        return res.status(500).send({error: 'Server error'});
+    }
+})
+
 export default router;
