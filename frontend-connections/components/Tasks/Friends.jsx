@@ -45,7 +45,6 @@ const Friends = () => {
     // Submit friend request
     const sendFriendRequest = async (e) => {
         e.preventDefault();
-        console.log(friend)
         const payload = {
             "user_id" : friend.user_id,
             "friend_id" : friend.friend_id,
@@ -61,7 +60,6 @@ const Friends = () => {
             'friend_id' : 0,
             'display_name' : ''
         });
-        console.log(payload)
         const requestOptions = {
             method : "POST",
             headers : {
@@ -81,7 +79,6 @@ const Friends = () => {
                 throw new Error(data.message || 'Failure to send friend request');
             }
             const data = await response.json();
-            console.log(data);
             setShowFriendForm(false);
 
         } catch (error) {
@@ -109,7 +106,6 @@ const Friends = () => {
             const data = await response.json();
             let modifyFriend = friendsList.find(fri => f.friend_id === fri.friend_id );
             modifyFriend.user_accept = true;
-            console.log(modifyFriend);
             setFriend(f);
 
 
@@ -166,7 +162,6 @@ const Friends = () => {
                 throw new Error(data.message || 'Failed to remove friend');
             }
             const data = await response.json();
-            console.log(data);
             setFriendsList(friendsList.filter((f) => f != frie));
 
         } catch (error) {
@@ -190,7 +185,6 @@ const Friends = () => {
                 throw new Error(data.message || 'Error retrieving friend list');
             }
             const data = await response.json();
-            console.log(data)
             setFriendsList(data);
         } catch(error) {
             console.error('Error: ', error);

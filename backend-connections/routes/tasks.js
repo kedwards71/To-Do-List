@@ -12,7 +12,6 @@ router.post('/', authenticateToken, async (req, res) =>{
             created_by, 
             owner_id,
         } = req.body;
-        console.log(created_by);
     let task_status = req.body.task_status !== '' ? req.body.task_status : 'Not started'
     let category = req.body.category !== "" ? req.body.category : "General";
     try {
@@ -54,7 +53,6 @@ router.delete('/:id', authenticateToken, async (req, res) => {
 router.put('/:id', authenticateToken, async (req, res) => {
     const taskId = req.params.id;
     const {task_title, task_description, category, task_status} = req.body
-    console.log(req.body)
     try{
         const result = await pool.query(
             `UPDATE tasks SET 
@@ -78,7 +76,6 @@ router.put('/accept/:id', authenticateToken ,async (req,res) =>{
             `UPDATE tasks SET acceptance = $1, task_status = $2 WHERE task_id = $3 RETURNING *`,
             [true, 'Not started', req.params.id]
         )
-        console.log(result.rows[0])
         return res.status(201).json(result.rows[0]);
 
     } catch (error) {
@@ -174,7 +171,6 @@ router.get('/:task_id/comment', authenticateToken, async (req,res) => {
                 WHERE task_id = $1`, [req.params.task_id]
         );
         const textAnalysis = await textAnalyzer(result.rows);
-        console.log(textAnalysis);
         return res.status(201).json(textAnalysis)
     } catch (error) {
         console.error('Error fetching comments', error.stack);

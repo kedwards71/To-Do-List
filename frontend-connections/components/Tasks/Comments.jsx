@@ -75,7 +75,6 @@ const Comments = ({selectedTask,showComments,setShowComments}) => {
             });
             setShowCommentForm(false);
 
-            console.log(data);
         } catch (error) {
             console.error('Error: ',error);
         }
@@ -97,7 +96,6 @@ const Comments = ({selectedTask,showComments,setShowComments}) => {
             }
             const data = await response.json();
             setCommentList(commentList.filter((c) => c !== comm));
-            console.log(data);
         } catch (error) {
             console.error('Error: ',error);
         }
@@ -119,7 +117,6 @@ const Comments = ({selectedTask,showComments,setShowComments}) => {
                 throw new Error(data.message || 'Error fetching comments');
             }
             const data = await response.json();
-            console.log(data);
             setCommentList(data);
         } catch (error) {
             console.error('Error: ', error);

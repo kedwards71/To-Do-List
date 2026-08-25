@@ -56,8 +56,6 @@ router.post('/', authenticateToken, async (req,res) => {
                 [userExists.rows[0].user_id, req.user.id, req.user.username, friend_accept, user_accept]
 
         );
-        console.log(result.rows[0]);
-        console.log(frequest.rows[0]);
         return res.status(201).json({requester : result.rows[0], receiver: frequest.rows[0]});
 
     } catch (error) {
@@ -104,7 +102,6 @@ router.delete('/:id', authenticateToken, async (req, res) => {
 //Accept a friend
 router.put('/accept', authenticateToken, async (req, res) => {
     try {
-        console.log(req.body.friend_id)
         const receiver = await pool.query(
             `UPDATE friend_list SET user_accept = true WHERE user_id = $1 AND friend_id = $2 RETURNING *`,
             [req.user.id, req.body.friend_id]
@@ -113,8 +110,6 @@ router.put('/accept', authenticateToken, async (req, res) => {
             `UPDATE friend_list SET friend_accept = true WHERE friend_id = $1 AND user_id = $2 RETURNING *`,
             [req.user.id, req.body.friend_id]
         )
-        console.log(receiver.rows[0])
-        console.log(sender.rows[0])
         return res.status(201).json({ receiver:receiver.rows[0], sender:sender.rows[0]});
     } catch (error) {
         console.error('Error accepting friend request', error.stack);

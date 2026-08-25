@@ -10,7 +10,6 @@ const JWT_SECRET = process.env.JWT_SECRET || 'secret';
 //Login to an established user
 router.post('/', async (req,res) =>{
     const {username, password} = req.body;
-    console.log(JSON.stringify(req.body,null,4))
     try {
         const result = await pool.query('SELECT * FROM users WHERE username = $1 ', [username]);
         if (result.rows.length === 0) {
@@ -23,7 +22,6 @@ router.post('/', async (req,res) =>{
         }
 
         const token = jwt.sign({id: user.id ? user.id : user.user_id, username: user.username}, JWT_SECRET, {expiresIn: '1h'});
-        console.log(token)
         res.status(200).json({token});
 
     } catch (error) {

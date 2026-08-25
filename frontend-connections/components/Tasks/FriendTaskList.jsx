@@ -105,7 +105,6 @@ const FriendTaskList = (({friend}) => {
             }
             const data = await response.json();
             setTaskList(taskList.filter((t) => t!= tas));
-            console.log(data);
         } catch (error) {
             console.error('Error:', error);
         }
@@ -126,7 +125,6 @@ const FriendTaskList = (({friend}) => {
                 throw new Error(data.message || 'Failure retrieving tasks.')
             }
             const data = await response.json();
-            console.log(data);
             setTaskList(data);
             setCategoryList([...new Set(data.map(task => task.category))]);
         } catch (error) {

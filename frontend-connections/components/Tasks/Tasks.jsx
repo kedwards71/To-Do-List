@@ -72,7 +72,6 @@ const Tasks = () => {
                 throw new Error(data.message || "Failed to delete category");
             }
             const data = await response.json();
-            console.log(data);
             setCategoryList(categoryList.filter((c) => c !== cat));
             setTaskList(taskList.filter((t) => t.category != cat));
             setCategory('');
@@ -117,7 +116,6 @@ const Tasks = () => {
                 throw new Error(data.message || "Failed to create a new task");
             }
             const data = await response.json();
-            console.log(data)
             setTaskList([...taskList, data]);
             if (!categoryList.includes(task.category))
                 {
@@ -183,7 +181,6 @@ const Tasks = () => {
             }
             const data = await response.json();
             setTaskList(taskList.filter((t) => t!= tas));
-            console.log(data);
         } catch (error) {
             console.error('Error:', error);
         }
@@ -206,13 +203,11 @@ const Tasks = () => {
                 throw new Error(data.message || 'Failure to Update task');
             }
             const data = await response.json();
-            console.log(data);
             setSelectedTask({
                 ...selectedTask,
                 "updated_at" : data.updated_at
             })
             let modifyTask = taskList.find(t => t.task_id === selectedTask.task_id);
-            console.log(modifyTask)
             modifyTask ={
                 ...modifyTask,
                 selectedTask
@@ -249,7 +244,6 @@ const Tasks = () => {
                 throw new Error(data.message || 'Failure to retrieve tasks');
             }
             const data = await response.json();
-            console.log(data);
             setTaskList(data);
             setCategoryList([...new Set(data.map(task => task.category))]);
         } catch (error) {

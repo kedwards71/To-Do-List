@@ -21,7 +21,6 @@ router.post('/', async (req,res) => {
              [username, email, age, encryptPassword]
         );
         const user = result.rows[0];
-        console.log(user);
         const token = jwt.sign({id: user.id ? user.id : user.user_id, username: result.rows[0].username}, JWT_SECRET, {expiresIn: '1h'});
         res.status(201).json({token});
     } catch (error) {
