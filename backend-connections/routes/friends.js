@@ -140,10 +140,15 @@ router.put('/:id', authenticateToken, async (req, res) => {
 
 //Retrieve Friends Tasks
 router.get('/tasks/:id', authenticateToken, async (req,res) => {
+    
     try {
         const result = await pool.query(
             `SELECT * FROM tasks WHERE user_id = $1 `,[req.params.id]
         );
+        if (result.rows.length === 0)
+        {
+            return res.status(404).json({error: 'No tasks found'});
+        }
         res.status(201).send(result.rows);
 
     } catch (error) {
