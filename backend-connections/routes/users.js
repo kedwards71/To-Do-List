@@ -3,6 +3,7 @@ import pool from '../db/pool.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
+import { authenticateToken } from '../auth.js';
 
 
 const router = Router();
@@ -15,6 +16,11 @@ router.post('/', async (req,res) => {
     const {username, email, age, password} = req.body;
     const encryptPassword = await bcrypt.hash(password,10);
     try {
+        const userExists = await pool.query(
+            `SELECT * FROM users WHERE username = $1 or email = $2`, [username,email]
+        );
+        if (userExists.rows.length > 0)
+            return res.status(409).send('Username')
         const result = await pool.query(
             `INSERT INTO users (username, email, age, password)
              VALUES ($1, $2, $3, $4) RETURNING *`,
@@ -28,6 +34,7 @@ router.post('/', async (req,res) => {
         res.status(500).send('Error creating user');
     }
 });
+
 
 
 export default router;

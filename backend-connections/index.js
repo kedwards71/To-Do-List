@@ -31,3 +31,5 @@ server.listen(PORT, () => {
 server.on('error', (err) => {
     console.error('Server error:', err.message);
 });
+
+export default app;
