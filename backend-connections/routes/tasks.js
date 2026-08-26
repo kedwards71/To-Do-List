@@ -12,7 +12,7 @@ router.post('/', authenticateToken, async (req, res) =>{
             created_by, 
             owner_id,
         } = req.body;
-    let task_status = req.body.task_status !== '' ? req.body.task_status : 'Not started'
+    let task_status = (req.body.task_status !== '' && req.body.task_status) ? req.body.task_status : 'Not started'
     let category = req.body.category !== "" ? req.body.category : "General";
     try {
         const acceptance = owner_id === created_by ? true : false;
@@ -40,8 +40,10 @@ router.delete('/:id', authenticateToken, async (req, res) => {
     const taskId = req.params.id;
     try{
         const result = await pool.query(
-            `DELETE FROM tasks WHERE task_id = $1`, [taskId]
+            `DELETE FROM tasks WHERE task_id = $1 RETURNING *`, [taskId]
         );
+        if (result.rows.length === 0)
+            return res.status(404).json({message: 'Task not found'});
         return res.status(201).json({message: 'Task deleted successfully'});
     } catch (error) {
         console.error('Error deleting task', error.stack);
@@ -62,6 +64,8 @@ router.put('/:id', authenticateToken, async (req, res) => {
             category=$4 WHERE task_id = $5 RETURNING *`,
             [task_title, task_description, task_status, category, taskId]
         );
+        if (result.rows.length === 0)
+            return res.status(404).json({message:'Task not found'});
         return res.status(201).json(result.rows[0])
     } catch (error){
         console.error('Error updating task', error.stack);
@@ -101,7 +105,7 @@ router.delete('/', authenticateToken, async (req, res) => {
 
 //Fetch tasks for a specific user
 router.get('/', authenticateToken, async (req, res) => {
-    const userId = req.query.user;
+    const userId = req.user.id;
     try{
         const result = await pool.query(
             `SELECT * FROM tasks WHERE owner_id = $1`, [userId]
