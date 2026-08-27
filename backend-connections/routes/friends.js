@@ -33,14 +33,14 @@ router.post('/', authenticateToken, async (req,res) => {
         if ((friendExists.rows.length > 0 && friendExists.rows[0].user_accept === true) && requestExists.rows.length > 0)
         {
             const addFriend = await pool.query(
-                `UPDATE friend_list SET user_accept = true WHERE user_id = $1 AND friend_id = $2`,
+                `UPDATE friend_list SET user_accept = true WHERE user_id = $1 AND friend_id = $2 RETURNING *`,
                 [req.user.id, userExists.rows[0].user_id]);
 
             const makeMutual = await pool.query(
-                `UPDATE friend_list SET friend_accept = true WHERE friend_id = $1 AND user_id = $2`,
+                `UPDATE friend_list SET friend_accept = true WHERE friend_id = $1 AND user_id = $2 RETURNING *`,
                 [req.user.id, userExists.rows[0].user_id]);
 
-            return res.status(201).json({accepted: addFriend.rows[0]});
+            return res.status(201).json({accepted: addFriend.rows[0], accepter:makeMutual.rows[0]});
         }
         else if(requestExists.rows.length !== 0){
             return res.status(409).send({error:'Request already sent'});
@@ -74,7 +74,7 @@ router.get('/', authenticateToken, async (req, res) => {
         {
             return res.status(404).json({error: 'No friends found'});
         }
-        return res.status(201).json(result.rows);
+        return res.status(200).json(result.rows);
     } catch (error) {
         console.error('Error creating task', error.stack);
         return res.status(500).send({error:'Server error'});
