@@ -123,6 +123,7 @@ router.post('/:task_id/comment', authenticateToken, async (req, res) => {
     const task_id = req.params.task_id;
     const {task_comment} = req.body;
     const commenter_id = req.user.id
+    let canComment = false;
     try {
         const taskExists = await pool.query(
             `SELECT * FROM tasks WHERE task_id = $1`, [task_id]
@@ -133,6 +134,18 @@ router.post('/:task_id/comment', authenticateToken, async (req, res) => {
         if (taskExists.rows.length === 0) {
             return res.status(404).json({error: 'Task not found'});
         }
+        if (taskExists.rows[0].owner_id === commenter_id)
+            canComment = true;
+        else{
+            const isFriend = await pool.query(
+                `SELECT * FROM friend_list WHERE user_id = $1 AND friend_id = $2`,
+                [taskExists.rows[0].owner_id, commenter_id]
+            );
+            if(isFriend.rows.length > 0 && isFriend.rows[0].friend_accept === true && isFriend.rows[0].user_accept === true )
+                canComment = true;
+        }
+        if(!canComment)
+            return res.status(403).send({message:"You don't have access to this comment"});
         const result = await pool.query(
             `INSERT INTO task_comments (task_id, commenter_id, task_comment)
              VALUES ($1, $2, $3) RETURNING *`,
@@ -175,7 +188,7 @@ router.get('/:task_id/comment', authenticateToken, async (req,res) => {
                 WHERE task_id = $1`, [req.params.task_id]
         );
         const textAnalysis = await textAnalyzer(result.rows);
-        return res.status(201).json(textAnalysis)
+        return res.status(200).json(textAnalysis)
     } catch (error) {
         console.error('Error fetching comments', error.stack);
         return res.status(500).send({error: 'Server error'});

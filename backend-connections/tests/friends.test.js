@@ -1,7 +1,6 @@
 import request from 'supertest';
 import app from '../index.js';
 import 'dotenv/config';
-import jwt from 'jsonwebtoken';
 
 describe('[GET, POST, UPDATE, DELETE] /friend (protected)', () => {
     let token;
