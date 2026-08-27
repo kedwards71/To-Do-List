@@ -38,7 +38,15 @@ Database (PostgreSQL) → Render Managed DB
 - JWT
 - Passwords hashed with bcrypt
 
-Future Improvements
+## Testing
+This project includes test suites for:
+- Authentication
+    - Making sure that routes are protected and JWT tokens are verified
+- Tasks, Friends, Comments (CRUD operations w/ protect ed routes and permissions)
+- Run all tests from 'backend-connections' with:
+    - npm test
+
+## Future Improvements
 - Chatrooms
     - Friends can chat realtime between each other
     - Maybe collaborative tasks for a group
