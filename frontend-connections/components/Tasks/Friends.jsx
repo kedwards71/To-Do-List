@@ -3,7 +3,6 @@ import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import Nav from 'react-bootstrap/Nav';
 import ListGroup from 'react-bootstrap/ListGroup';
-import Modal from 'react-bootstrap/Modal';
 import { TiUserAdd } from "react-icons/ti";
 import { HiUserRemove } from "react-icons/hi";
 import { FaUserEdit } from "react-icons/fa";
@@ -146,11 +145,16 @@ const Friends = () => {
             </Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
-                <Nav variant="pills" defaultActiveKey="#Mutual">
+                
+                <Nav variant="tabs" defaultActiveKey="#Mutual">
                     {friendStatus.map((status) => {
                         return(
                         <Nav.Item key={status}>
                             <Nav.Link
+                                style={{background: selectedFriendStatus === status ? 'blue' : 'white',
+                                        color: selectedFriendStatus === status ? 'white' : ''
+                                }}
+                                active={selectedFriendStatus === status}
                                 href={status}
                                 onClick={ (e) => {
                                         e.preventDefault();
