@@ -269,7 +269,7 @@ const Tasks = () => {
             getTasks(user);
         }
 
-    },[showUpdateForm,selectedStatus])
+    },[selectedStatus])
     
     return (
         <>
