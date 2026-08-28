@@ -45,7 +45,7 @@ const Tasks = () => {
     // Filter tasks by category and status
     const filteredTasks = 
     categoryList.includes(category) && category ? 
-    ([...taskList].sort((a,b) => a.task_status.localeCompare(b.task_status)))
+    ([...taskList].sort((a,b) => a.task_status.localeCompare(b.task_status))).reverse()
     .filter(t => (t.category === category) && ((selectedStatus === 'All' && t.task_status !=='Pending') || t.task_status === selectedStatus)) 
     : ([...taskList].sort((a,b) => a.category.localeCompare(b.category)))
     .filter(t => (selectedStatus === 'All' || t.task_status === selectedStatus));
