@@ -126,7 +126,7 @@ const Comments = ({selectedTask,showComments,setShowComments}) => {
     useEffect(() => {
         if(selectedTask.task_id)
             getComments(selectedTask);
-    }, [showCommentForm, showComments]);
+    }, [showCommentForm, selectedTask]);
   return (
     <span>
                 <Offcanvas style={{zIndex:'9999'}}  show={showComments} placement='bottom' onHide={() => setShowComments(false)} >

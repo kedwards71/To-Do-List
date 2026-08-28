@@ -134,7 +134,7 @@ const FriendTaskList = (({friend}) => {
 
     useEffect(() =>{
         getTasks();
-    },[selectedStatus,showTodoForm])
+    },[category,showTodoForm])
 
     return (
         <span>
