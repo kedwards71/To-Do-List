@@ -8,6 +8,7 @@ import { HiUserRemove } from "react-icons/hi";
 import { FaUserEdit } from "react-icons/fa";
 import FriendTaskList from './FriendTaskList';
 import FriendForms from './FriendForms';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -31,6 +32,7 @@ const Friends = () => {
         import.meta.env.VITE_HOST 
         || 
         `http://localhost:8123`;
+    const navigate = useNavigate();
 
     // Filter friends by status
     const filteredFriends =
@@ -72,6 +74,12 @@ const Friends = () => {
             console.error('Error:', error)
         }
 
+    }
+
+    const handleLogOut = () => {
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('Bearer');
+        navigate('/');
     }
 
 
@@ -133,6 +141,9 @@ const Friends = () => {
     <div>
         <Button variant="primary" onClick={handleShowFriends}>
             Friends
+        </Button>
+        <Button variant='secondary' onClick={handleLogOut}>
+            Log out
         </Button>
 
 

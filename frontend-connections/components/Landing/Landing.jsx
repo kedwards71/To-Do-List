@@ -162,7 +162,6 @@ const Landing = () =>{
               <label>Password</label><br/>
               <input type="password" placeholder='Password' value={authCredentials.password} onChange={(e) => setAuthCredentials({...authCredentials, password: e.target.value})} required/>
             </div>
-            <p><strong>Forgot Password?</strong></p>
             <button type="submit" className="btn btn-primary">Register</button>
             </> 
             }
