@@ -11,6 +11,7 @@ import { IoMdAdd } from "react-icons/io";
 import { FaMinus, FaEdit, FaCommentAlt } from "react-icons/fa";
 import Friends from './Friends.jsx';
 import Comments from './Comments.jsx';
+import { useNavigate } from 'react-router-dom';
 
 const Tasks = () => {
 
@@ -41,6 +42,7 @@ const Tasks = () => {
     const [taskList, setTaskList] = useState([]);
     const [categoryList, setCategoryList] = useState([]);
     const [showComments, setShowComments] = useState(false);
+    const navigate = useNavigate();
 
     // Filter tasks by category and status
     const filteredTasks = 
@@ -241,6 +243,8 @@ const Tasks = () => {
             const response = await fetch(`${host || 'http://localhost:8123'}/task?user=${user.id}`, requestOptions);
             if (!response.ok)
             {
+                if(response.status === 403)
+                    navigate('/');
                 const data = await response.json();
                 throw new Error(data.message || 'Failure to retrieve tasks');
             }

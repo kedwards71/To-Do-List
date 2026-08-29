@@ -1,18 +1,19 @@
-.btn-add-task, .btn-friend-add, .btn-comment-add{
+.btn-add-task, .btn-friend-add, .btn-comment-add, .btn-room-create{
     cursor: pointer;
     margin-left: 20px;
     color: green;
 }
 
-.btn-task-add{
+.btn-task-add,.btn-invite-add{
     margin-left: 20px;
 }
 
-.task-form-body, .friend-form-body, .comment-form-body{
+.task-form-body, .friend-form-body, .comment-form-body, .room-form-body{
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 10px;
+    overflow-wrap:anywhere;
 }
 
 .comment-form-body .form-group{

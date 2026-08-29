@@ -9,6 +9,7 @@ import { FaUserEdit } from "react-icons/fa";
 import FriendTaskList from './FriendTaskList';
 import FriendForms from './FriendForms';
 import { useNavigate } from 'react-router-dom';
+import ChatRooms from './ChatRooms';
 
 
 
@@ -18,6 +19,7 @@ const Friends = () => {
     const [showFriendForm, setShowFriendForm] = useState(false);
     const [friendStatus, setFriendStatus] = useState(['Mutual' , 'Received', 'Sent']);
     const [selectedFriendStatus, setSelectedFriendStatus] = useState('Mutual');
+    const [selectedTab, setSelectedTab] = useState('Friends');
     const [friend, setFriend] = useState({
         'username' : '',
         'user_id' : 0,
@@ -40,6 +42,8 @@ const Friends = () => {
         : selectedFriendStatus === 'Sent' ? friendsList.filter(f => ((f.user_accept === true) && (f.friend_accept === false) ))
         : friendsList.filter(f => ((f.user_accept === false) && (f.friend_accept===true)));
 
+    const mutualFriends =
+        friendsList.filter(f => ((f.user_accept === true) && (f.friend_accept === true)));
     //Modal open and close controls
     const handleCloseFriends = () => setShowFriends(false);
     const handleShowFriends = () => setShowFriends(true);
@@ -152,71 +156,73 @@ const Friends = () => {
             <Offcanvas.Title>
                 <span>Friends List</span>
                 <span><TiUserAdd className="btn-friend-add" onClick={() => setShowFriendForm(true)}></TiUserAdd></span>
-
             </Offcanvas.Title>
             </Offcanvas.Header>
-            <Offcanvas.Body>
-                
-                <Nav variant="tabs" defaultActiveKey="#Mutual">
-                    {friendStatus.map((status) => {
-                        return(
-                        <Nav.Item key={status}>
-                            <Nav.Link
-                                style={{background: selectedFriendStatus === status ? 'blue' : 'white',
-                                        color: selectedFriendStatus === status ? 'white' : ''
-                                }}
-                                active={selectedFriendStatus === status}
-                                href={status}
-                                onClick={ (e) => {
-                                        e.preventDefault();
-                                        setSelectedFriendStatus(status);
-                                    } 
-                                }
-                            >
-                                {status}
-                            </Nav.Link>
-                        </Nav.Item>
-                        )
-                    })}
-                </Nav>
-                <ListGroup>
-                {filteredFriends.length > 0 ? 
-                    filteredFriends.map((f,index) => {
-                        return(
-                            <ListGroup.Item key={index}>
-                                <span>{f.display_name}</span>
-                                {
-                                    (selectedFriendStatus === 'Received')
-                                    &&
-                                    <span><Button
-                                            variant='success'
-                                            className='accept-friend'
+            <ChatRooms friends={mutualFriends} selectedTab={selectedTab} setSelectedTab={setSelectedTab}/>
+            {selectedTab === 'Friends' &&(
+                <Offcanvas.Body>
+                    
+                    <Nav variant="tabs" defaultActiveKey="#Mutual">
+                        {friendStatus.map((status) => {
+                            return(
+                            <Nav.Item key={status}>
+                                <Nav.Link
+                                    style={{background: selectedFriendStatus === status ? 'blue' : 'white',
+                                            color: selectedFriendStatus === status ? 'white' : ''
+                                    }}
+                                    active={selectedFriendStatus === status}
+                                    href={status}
+                                    onClick={ (e) => {
+                                            e.preventDefault();
+                                            setSelectedFriendStatus(status);
+                                        } 
+                                    }
+                                >
+                                    {status}
+                                </Nav.Link>
+                            </Nav.Item>
+                            )
+                        })}
+                    </Nav>
+                    <ListGroup>
+                    {filteredFriends.length > 0 ? 
+                        filteredFriends.map((f,index) => {
+                            return(
+                                <ListGroup.Item key={index}>
+                                    <span>{f.display_name}</span>
+                                    {
+                                        (selectedFriendStatus === 'Received')
+                                        &&
+                                        <span><Button
+                                                variant='success'
+                                                className='accept-friend'
+                                                onClick={() => {
+                                                acceptFriendRequest(f)
+                                                }}
+                                                >
+                                            Accept
+                                            </Button>
+                                        </span>
+                                    }
+                                    <span><HiUserRemove className="btn-friend-remove" onClick={() => handleFriendRemove(f)}></HiUserRemove></span>
+                                    <span>
+                                        <FaUserEdit className="btn-friend-edit"
                                             onClick={() => {
-                                            acceptFriendRequest(f)
+                                                setFriend(f);
+                                                setShowUpdateDisplay(true);
                                             }}
-                                            >
-                                        Accept
-                                        </Button>
+                                        />
                                     </span>
-                                }
-                                <span><HiUserRemove className="btn-friend-remove" onClick={() => handleFriendRemove(f)}></HiUserRemove></span>
-                                <span>
-                                    <FaUserEdit className="btn-friend-edit"
-                                        onClick={() => {
-                                            setFriend(f);
-                                            setShowUpdateDisplay(true);
-                                        }}
-                                    />
-                                </span>
-                                {(selectedFriendStatus==='Mutual')&&<FriendTaskList friend={f}/>}
-                            </ListGroup.Item>
-                        )
-                    })
-                    :
-                    'This category currently has no one in it. If you want to get started try sending a request.'
-                }
-                </ListGroup>
-            </Offcanvas.Body>
+                                    {(selectedFriendStatus==='Mutual')&&<FriendTaskList friend={f}/>}
+                                </ListGroup.Item>
+                            )
+                        })
+                        :
+                        'This category currently has no one in it. If you want to get started try sending a request.'
+                    }
+                    </ListGroup>
+                </Offcanvas.Body>
+            )}
         </Offcanvas>
         <FriendForms 
             showFriendForm={showFriendForm} 

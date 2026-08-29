@@ -88,6 +88,7 @@
 --     member_id INT NOT NULL,
 --     member_display_name TEXT,
 --     joined_at TIMESTAMP DEFAULT NOW(),
+--     member_accept bool DEFAULT false,
 --     PRIMARY KEY (room_id, member_id),
 
 --     FOREIGN KEY (room_id) REFERENCES chat_rooms(room_id)
@@ -122,3 +123,4 @@
 -- drop table chat_rooms;
 -- drop table room_members;
 -- drop table messages;
+
