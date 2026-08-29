@@ -28,13 +28,27 @@ router.post('/', async (req,res) => {
         );
         const user = result.rows[0];
         const token = jwt.sign({id: user.id ? user.id : user.user_id, username: result.rows[0].username}, JWT_SECRET, {expiresIn: '1h'});
-        res.status(201).json({token});
+        return res.status(201).json({token});
     } catch (error) {
         console.error('Error creating user', error.stack);
-        res.status(500).send('Error creating user');
+        return res.status(500).send('Error creating user');
     }
 });
 
+//Get user by username
+router.get('/:username', authenticateToken, async (req, res) => {
+    try {
+        const result = await pool.query(
+            `SELECT * FROM users WHERE username = $1`, [req.params.username]
+        );
+        if(result.rows.length === 0)
+            return res.status(404).json({message : 'User not found'})
+        return res.status(200).json(result.rows[0]);
+    } catch (error) {
+        console.error('Error searching for user', error.stack);
+        return res.status(500).send('Error searching for user');
+    }
+});
 
 
 export default router;

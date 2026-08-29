@@ -64,7 +64,8 @@ const FriendForms = ({
     }
 
     // Update Display Name
-    const handleFriendUpdate = async () => {
+    const handleFriendUpdate = async (e) => {
+        e.preventDefault();
         const requestOptions = {
             method: 'PUT',
             headers: {

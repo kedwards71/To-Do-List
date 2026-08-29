@@ -6,6 +6,7 @@ import taskRouter from './routes/tasks.js';
 import registerRouter from './routes/users.js';
 import friendRouter from './routes/friends.js';
 import authRouter from './routes/login.js';
+import chatRouter from './routes/chatRooms.js';
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -21,6 +22,7 @@ app.use('/task', taskRouter);
 app.use('/users', registerRouter);
 app.use('/login', authRouter);
 app.use('/friend',friendRouter);
+app.use('/chat', chatRouter);
 
 const server = http.createServer(app);
 
