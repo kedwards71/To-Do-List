@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from 'react-bootstrap/Button';
 
@@ -8,6 +8,7 @@ const ChatRoomMessages = ({
     selectedChatRoom,
     filteredMembers
 }) => {
+    const [message, setMessage] = useState('');
 
     return (
         <Modal
@@ -24,7 +25,7 @@ const ChatRoomMessages = ({
                         {filteredMembers.map((f,index) => {
                             return(
                                 <span>
-                                    {f.member_display_name}
+                                    {f.member_id === selectedChatRoom.room_owner ? <strong>{f.member_display_name}</strong> : f.member_display_name}
                                     {(filteredMembers.length-1 !== index)&&', '}
                                 </span>
                             )
