@@ -42,7 +42,7 @@
     margin-left: 20px;
 }
 
-.btn-comment-task, .btn-friend-tasks {
+.btn-comment-task, .btn-friend-tasks, .btn-room-chat {
     cursor: pointer;
     margin-left: 20px;
     color: purple;

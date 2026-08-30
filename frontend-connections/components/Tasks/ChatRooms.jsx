@@ -6,6 +6,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import { FaDoorOpen } from "react-icons/fa";
 import { GiExitDoor } from 'react-icons/gi';
 import { FaTrash } from "react-icons/fa";
+import { IoIosChatbubbles } from 'react-icons/io';
 import ChatRoomForm from "./ChatRoomForm";
 
 const ChatRooms = ({friends, selectedTab,setSelectedTab}) => {
@@ -196,6 +197,9 @@ const ChatRooms = ({friends, selectedTab,setSelectedTab}) => {
                                             <span><GiExitDoor className="btn-room-leave" onClick={() => handleRoomLeave(f)}/></span>
                                             {selectedRoomStatus === 'Invited' && (
                                                 <Button variant="success" className="btn-room-add" onClick={() => handleRoomAccept(f)}>Accept</Button>
+                                            )}
+                                            {selectedRoomStatus !== 'Invited' && (
+                                                <IoIosChatbubbles className="btn-room-chat" onClick={()=>alert('Chatting not yet implemented.')} />
                                             )}
                                         </ListGroup.Item>
                                     )
