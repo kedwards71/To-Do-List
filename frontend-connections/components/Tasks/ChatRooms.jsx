@@ -8,11 +8,18 @@ import { GiExitDoor } from 'react-icons/gi';
 import { FaTrash } from "react-icons/fa";
 import { IoIosChatbubbles } from 'react-icons/io';
 import ChatRoomForm from "./ChatRoomForm";
+import ChatRoomMessages from "./ChatRoomMessages";
 
 const ChatRooms = ({friends, selectedTab,setSelectedTab}) => {
 
     const [chatRooms, setChatRooms] = useState([]);
     const [showChatForm, setShowChatForm] = useState(false);
+    const [showChatRoomMessages, setShowChatRoomMessages] = useState(false);
+    const [selectedChatRoom, setSelectedChatRoom] = useState({
+        'room_id' : 0,
+        'room_name' : '',
+        'room_owner' : 0
+    });
 
     const [tabOptions, setTabOptions] = useState(['Friends','Rooms'])
     const [selectedRoomStatus, setSelectedRoomStatus] = useState('Owned');
@@ -27,6 +34,9 @@ const ChatRooms = ({friends, selectedTab,setSelectedTab}) => {
             && r.member_accept === true && c.room_owner !== r.member_id))))
         : chatRooms.filter(c => ((roomsWithMe.some(r => (r.room_id === c.room_id)
             && r.member_accept === false))));
+
+    const filteredMembers =
+        roomMembers.filter(r => (r.room_id === selectedChatRoom.room_id) && r.member_accept === true);
 
     const host = import.meta.env.VITE_BACKEND
     || 
@@ -199,7 +209,13 @@ const ChatRooms = ({friends, selectedTab,setSelectedTab}) => {
                                                 <Button variant="success" className="btn-room-add" onClick={() => handleRoomAccept(f)}>Accept</Button>
                                             )}
                                             {selectedRoomStatus !== 'Invited' && (
-                                                <IoIosChatbubbles className="btn-room-chat" onClick={()=>alert('Chatting not yet implemented.')} />
+                                                <IoIosChatbubbles
+                                                 className="btn-room-chat" 
+                                                 onClick={()=>{
+                                                    setSelectedChatRoom(f);
+                                                    setShowChatRoomMessages(true);
+                                                 }} 
+                                                />
                                             )}
                                         </ListGroup.Item>
                                     )
@@ -218,6 +234,12 @@ const ChatRooms = ({friends, selectedTab,setSelectedTab}) => {
                 roomMembers={roomMembers}
                 setRoomMembers={setRoomMembers}
                 friends={friends}
+            />
+            <ChatRoomMessages
+                showChatRoomMessages={showChatRoomMessages}
+                setShowChatRoomMessages={setShowChatRoomMessages}
+                selectedChatRoom={selectedChatRoom}
+                filteredMembers={filteredMembers}
             />
 
         </div>
