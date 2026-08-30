@@ -51,7 +51,7 @@ const ChatRooms = ({friends, selectedTab,setSelectedTab}) => {
             const data = await response.json();
             let modifyMember = roomMembers.find(r => ((r.room_id === room.room_id) && (userInfo.id === r.member_id)));
             modifyMember = data;
-            
+            setSelectedRoomStatus('Joined');
         } catch (error) {
             console.error('Error: ', error);
         }

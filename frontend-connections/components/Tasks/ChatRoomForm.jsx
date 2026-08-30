@@ -28,7 +28,7 @@ const ChatRoomForm = ({
         import.meta.env.VITE_HOST 
         || 
         `http://localhost:8123`;
-        
+
     const handleRoomCreate = async (e) => {
         e.preventDefault();
         const requestOptions = {
@@ -86,6 +86,7 @@ const ChatRoomForm = ({
                 }
                 const data = await response.json();
                 setRoomMembers(prev => [...prev,data]);
+                setInviteList([]);
             } catch (error) {
                 console.error('Error: ', error);
             }
