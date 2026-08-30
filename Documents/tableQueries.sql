@@ -116,6 +116,49 @@
 --         ON DELETE CASCADE
 -- );
 
+CREATE TABLE room_tasks(
+    task_id SERIAL PRIMARY KEY,
+    room_id INT NOT NULL,
+    task_title VARCHAR(255) NOT NULL,
+    task_description VARCHAR(255),
+    task_status VARCHAR(50) NOT NULL DEFAULT 'Not Started',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_by INT NOT NULL,
+    updated_by INT,
+    category VARCHAR(50),
+
+    FOREIGN KEY (room_id) REFERENCES chat_rooms(room_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (created_by) REFERENCES users(user_id)
+        ON UPDATE CASCADE
+        ON DELETE SET NULL
+);
+
+CREATE TRIGGER set_timestamp_room_tasks
+BEFORE UPDATE ON room_tasks
+FOR EACH ROW
+EXECUTE FUNCTION update_timestamp();
+
+CREATE TABLE room_task_comments (
+    comment_id SERIAL PRIMARY KEY,
+    task_id INT NOT NULL,
+    commenter_id INT NOT NULL,
+    task_comment TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    emotion VARCHAR(50),
+
+    FOREIGN KEY (task_id) REFERENCES room_tasks(task_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (commenter_id) REFERENCES users(user_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
 -- drop table task_comments;
 -- drop table friend_list;
 -- drop table tasks;
@@ -123,4 +166,5 @@
 -- drop table chat_rooms;
 -- drop table room_members;
 -- drop table messages;
-
+-- drop table room_tasks
+-- drop table room_task_comments

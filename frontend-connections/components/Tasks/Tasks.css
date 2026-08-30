@@ -78,3 +78,13 @@
 .messages-footer input{
     width: 100%;
 }
+
+.chat-room-container{
+    height: 100vh;
+    margin: 0.5rem;
+}
+
+.chat-room-categories, .chat-room-tasks{
+    height: 50%;
+    overflow-y: auto;
+}
