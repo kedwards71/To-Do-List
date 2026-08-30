@@ -55,6 +55,86 @@ router.post('/:room_id', authenticateToken, async(req,res) => {
     }
 });
 
+//DELETE chat room
+router.delete('/:room_id', authenticateToken, async(req,res) => {
+    try{
+        const isOwner = await pool.query(
+            `SELECT * FROM chat_rooms WHERE room_owner = $1 AND room_id = $2`,
+            [req.user.id, req.params.room_id]
+        );
+        if (isOwner.rows.length === 0)
+            return res.status(403).json({message: 'Unauthorized access to delete'});
+        const result = await pool.query(
+            `DELETE FROM chat_rooms WHERE room_id = $1 RETURNING *`,
+            [req.params.room_id]
+        );
+        if (result.rows.length === 0)
+            return res.status(404).json({message: 'Room not found'});
+        return res.status(201).send({message: 'Room successfully deleted.'});
+    } catch (error) {
+        console.error('Error: ', error.stack);
+        return res.status(500).send({error: 'Server error'});
+    }
+});
+//Update room member, accept invitation to room
+router.put('/:room_id/accept', authenticateToken, async (req,res) => {
+    try {
+        const result = await pool.query(
+            `UPDATE room_members SET member_accept = true WHERE room_id = $1 AND member_id = $2 RETURNING *`,
+            [req.params.room_id, req.user.id]
+        );
+        if (result.rows.length === 0)
+            return res.status(404).json({message:'Room membership not found.'});
+        return res.status(201).json(result.rows[0]);
+    } catch (error) {
+        console.error('Error: ', error.stack);
+        return res.status(500).send({error: 'Server error'});
+    }
+});
+
+
+//DELETE room member
+router.delete('/:room_id/leave', authenticateToken, async (req, res) => {
+    try {
+        const isOwner = await pool.query (
+            `SELECT * FROM chat_rooms WHERE room_id = $1 AND room_owner = $2`,
+            [req.params.room_id, req.user.id]
+        );
+        if (isOwner.rows.length > 0){
+            const hasMembers = await pool.query (
+                `SELECT * FROM room_members WHERE room_id = $1 AND member_id <> $2 LIMIT 1`,
+                [req.params.room_id, req.user.id]
+            );
+            if(hasMembers.rows.length > 0){
+                await pool.query (
+                    `UPDATE chat_rooms SET room_owner = $1 WHERE room_id = $2`,
+                    [hasMembers.rows[0].member_id, req.params.room_id]
+                );
+            }
+            else {
+                const result = await pool.query(
+                    `DELETE FROM chat_rooms WHERE room_id = $1 RETURNING *`,
+                    [req.params.room_id]
+                );
+                if(result.rows.length > 0)
+                    return res.status(201).json({message:'Room successfully left'});
+                else
+                    return res.status(404).json({message: 'No room found.'})
+            }
+        }
+        const result = await pool.query(
+            `DELETE FROM room_members WHERE room_id = $1 AND member_id = $2 RETURNING *`,
+            [req.params.room_id, req.user.id]
+        );
+        if (result.rows.length === 0)
+            return res.status(404).json({message: 'Membership not found.'})
+        return res.status(201).json({message: 'Room successfully left.'})
+    } catch (error) {
+        console.error('Error: ',error.stack);
+        return res.status(500).send({error: 'Server error'});
+    }
+});
+
 // Get Chat rooms
 router.get('/', authenticateToken, async(req,res) => {
     try {
