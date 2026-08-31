@@ -82,6 +82,7 @@
 .chat-room-container{
     height: 100vh;
     margin: 0.5rem;
+    overflow-y: scroll;
 }
 
 .chat-room-categories, .chat-room-tasks{
