@@ -283,7 +283,7 @@ const ChatRoomMessages = ({
                     className="messages-container"
                 >
                     <Card style={{height:'100%'}}>
-                        
+                        Chatting not yet implemented
                     </Card>
                     <Modal.Footer>
                         <div className="messages-footer">
