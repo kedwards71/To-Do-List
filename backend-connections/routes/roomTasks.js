@@ -4,7 +4,7 @@ import { authenticateToken } from '../auth.js';
 import { textAnalyzer } from '../textAnalyze.js';
 
 const router = Router();
-
+// Create a task for a room
 router.post('/task', authenticateToken, async(req,res) => {
     const {
         room_id,
@@ -35,7 +35,7 @@ router.post('/task', authenticateToken, async(req,res) => {
         return res.status(500).send({message: 'Server Error'});
     }
 });
-
+// Update a ask for a room
 router.put('/task/:task_id', authenticateToken, async(req,res) => {
     const task_id = req.params.task_id;
     const {
@@ -63,7 +63,7 @@ router.put('/task/:task_id', authenticateToken, async(req,res) => {
         return res.status(500).send({message: 'Server Error'});
     }
 });
-
+//Get all tasks for a room
 router.get('/:room_id', authenticateToken, async(req,res) =>{
     try {
         const result = await pool.query(
@@ -77,6 +77,36 @@ router.get('/:room_id', authenticateToken, async(req,res) =>{
         console.error('Error: ', error.stack);
         return res.status(500).send({message: 'Server Error'});
     }
-})
+});
+// Delete all tasks in a room by category
+router.delete('/', authenticateToken, async (req, res) => {
+    console.log('eere')
+    try {
+        const result = await pool.query(
+            `DELETE FROM room_tasks WHERE category = $1 AND room_id = $2 RETURNING *`,
+            [req.query.category, req.query.chatroom]
+        );
+        if (result.rows.length === 0)
+            return res.status(404).json({message:'Record not found'});
+        return res.status(201).json({message:'Category successfully deleted'});
+    } catch (error) {
+        console.error('Error: ', error.stack);
+        return res.status(500).send({message: 'Server error'});
+    }
+});
 
+router.delete('/task/:task_id', authenticateToken, async (req,res) => {
+    try {
+        const result = await pool.query(
+            `DELETE FROM room_tasks WHERE task_id = $1 RETURNING *`,
+            [req.params.task_id]
+        );
+        if (result.rows.length === 0)
+            return res.status(404).json({message: 'Record not found'});
+        return res.status(201).json({message:'Task successfully deleted.'});
+    } catch (error) {
+        console.error('Error: ', error.stack);
+        return res.status(500).send({message: 'Server error'});
+    }
+});
 export default router;

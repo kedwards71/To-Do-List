@@ -10,6 +10,8 @@ import { IoMdAdd } from "react-icons/io";
 import { FaCommentAlt, FaEdit, FaMinus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import ChatRoomMessagesTaskForm from "./ChatRoomMessagesTaskForm";
+import { TiUserAdd } from "react-icons/ti";
+import ChatRoomInvite from "./ChatRoomInvite";
 
 const ChatRoomMessages = ({
     showChatRoomMessages,
@@ -42,6 +44,8 @@ const ChatRoomMessages = ({
 
     const [taskStatus, setTaskStatus] = useState(['All', 'Not started', 'In progress', 'Completed']);
     const [selectedStatus, setSelectedStatus] = useState('All');
+    const [showChatInviteForm, setShowChatInviteForm] = useState(false);
+    const userInfo = JSON.parse(sessionStorage.getItem('token'));
     const navigate = useNavigate();
 
     const host = import.meta.env.VITE_BACKEND 
@@ -85,17 +89,54 @@ const ChatRoomMessages = ({
         }
     };
 
-    const handleCategoryDelete = async() => {
-
+    const handleCategoryDelete = async(cat) => {
+        const requestOptions = {
+            method : 'DELETE',
+            headers : {
+                'Content-Type' : 'application/json',
+                'Authorization' : `Bearer ${sessionStorage.getItem('Bearer')}`
+            }
+        }
+        try {
+            const response = await fetch(`${host || 'http://localhost:8123'}/room?chatroom=${selectedChatRoom.room_id}&category=${cat}`,requestOptions);
+            if (!response.ok){
+                const data = await response.json();
+                throw new Error(data.message || 'Error deleting category');
+            }
+            const data = await response.json();
+            console.log(data);
+            setTaskList(taskList.filter(t => (t.category !== cat)));
+            setCategoryList(categoryList.filter(c => (c !== cat)));
+        } catch (error) {
+            console.error('Error: ', error);
+        }
     };
 
     const handleTaskDelete = async() => {
-
+        const requestOptions = {
+            method : 'DELETE',
+            headers : {
+                'Content-Type' : 'application/json',
+                'Authorization' : `Bearer ${sessionStorage.getItem('Bearer')}`
+            }
+        };
+        try {
+            const response = await fetch(`${host || 'http://localhost:8123'}/room/task/${selectedTask.task_id}`, requestOptions);
+            if (!response.ok){
+                const data = await response.json();
+                throw new Error(data.message || 'Error deleting task');
+            }
+            const data = await response.json();
+            console.log(data);
+            setTaskList(taskList.filter(t => selectedTask === t));
+        } catch (error) {
+            console.error('Error: ', error);
+        }
     };
 
     useEffect(() => {
         getTasks();
-    },[showTaskUpdateForm,selectedChatRoom.room_id])
+    },[showTaskUpdateForm,selectedChatRoom.room_id,selectedStatus])
 
     return (
         <Modal
@@ -105,7 +146,12 @@ const ChatRoomMessages = ({
         >
             <Modal.Header closeButton>
                 <Modal.Title>
-                    <h1>{selectedChatRoom.room_name}  (Not fully implemented)</h1>
+                    <h1>
+                        {selectedChatRoom.room_name}
+                        {(userInfo.id === selectedChatRoom.room_owner)&&
+                            <TiUserAdd className="btn-friend-add" onClick={() => setShowChatInviteForm(true)}/>
+                        }
+                    </h1>
                     <h4>
                         Members:<br/>
                         {filteredMembers.map((f,index) => {
@@ -145,7 +191,16 @@ const ChatRoomMessages = ({
                                                             setShowTaskCreateForm(true);
                                                         }}/>
                                                     </span>
-                                                    <span><FaMinus className="btn-remove-task" onClick={() => alert('Feature not yet implemented')}/></span>
+                                                    <span>
+                                                        {
+                                                            (selectedChatRoom.room_owner === userInfo.id)
+                                                            &&
+                                                            <FaMinus className="btn-remove-task" onClick={() => {
+                                                                handleCategoryDelete(cat)
+                                                                }}/>
+                                                        }
+
+                                                    </span>
                                                 </ListGroup.Item>
                                             )
                                         })}
@@ -191,7 +246,9 @@ const ChatRoomMessages = ({
                                                             }
                                                             {tas.task_status==='Completed' ? <s>{tas.task_title}</s> : tas.task_title}
                                                         </span>
-                                                        <span><FaMinus className='btn-remove-task' onClick={() => alert('Not yet implemented')}/></span>
+                                                        {(tas.created_by === userInfo.id || selectedChatRoom.room_owner === userInfo.id) &&
+                                                            <span><FaMinus className='btn-remove-task' onClick={handleTaskDelete}/></span>
+                                                        }
                                                         <span>
                                                             <FaEdit
                                                                 className="btn-edit-task"
@@ -254,6 +311,11 @@ const ChatRoomMessages = ({
                 taskList={taskList}
                 setTaskList={setTaskList}
                 filteredMembers={filteredMembers}
+            />
+            <ChatRoomInvite 
+                selectedChatRoom={selectedChatRoom}
+                showChatInviteForm={showChatInviteForm}
+                setShowChatInviteForm={setShowChatInviteForm}
             />
         </Modal>
     )
