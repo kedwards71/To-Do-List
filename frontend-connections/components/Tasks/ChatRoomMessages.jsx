@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import ChatRoomMessagesTaskForm from "./ChatRoomMessagesTaskForm";
 import { TiUserAdd } from "react-icons/ti";
 import ChatRoomInvite from "./ChatRoomInvite";
+import ChatRoomComments from "./ChatRoomComments";
 
 const ChatRoomMessages = ({
     showChatRoomMessages,
@@ -45,6 +46,7 @@ const ChatRoomMessages = ({
     const [taskStatus, setTaskStatus] = useState(['All', 'Not started', 'In progress', 'Completed']);
     const [selectedStatus, setSelectedStatus] = useState('All');
     const [showChatInviteForm, setShowChatInviteForm] = useState(false);
+    const [showComments, setShowComments] = useState(false);
     const userInfo = JSON.parse(sessionStorage.getItem('token'));
     const navigate = useNavigate();
 
@@ -263,7 +265,7 @@ const ChatRoomMessages = ({
                                                                 className="btn-comment-task"
                                                                 onClick={() => {
                                                                     setSelectedTask(tas);
-                                                                    alert('Not yet implemented');
+                                                                    setShowComments(true);
                                                                 }}/>
                                                         </span>
                                                         {tas.task_description && (<span><br/><p><i> Description</i>: {tas.task_description}</p></span>)}
@@ -316,6 +318,12 @@ const ChatRoomMessages = ({
                 selectedChatRoom={selectedChatRoom}
                 showChatInviteForm={showChatInviteForm}
                 setShowChatInviteForm={setShowChatInviteForm}
+            />
+            <ChatRoomComments
+                selectedTask={selectedTask}
+                showComments={showComments}
+                setShowComments={setShowComments}
+                selectedChatRoom={selectedChatRoom}
             />
         </Modal>
     )
