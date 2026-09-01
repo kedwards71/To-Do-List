@@ -18,6 +18,12 @@ The following app is a to-do list with social features allowing friends to make 
     - https://to-do-list-yehb.onrender.com/
 - Emotion Analysis
     - Each comment is posted to an API (Emotion Detection API) that returns a grade for the overall speech. I took the most scored emotion and then converted it to an emoji to display alongside on comment. This is intended to show someone's overall tone in a message for a particular task
+- Chat Rooms
+    - Users can now create rooms and invite members to join the room
+- Collaborative Group Tasks
+    - Members of a room can now create tasks. These tasks can be edited by anyone. Only the task owner or the room owner are able to delete the tasks.
+    Only the room owner can delete categories.
+
 
 ## Tech Stack
 - Frontend: React, bootstrap (CSS)
@@ -49,11 +55,10 @@ This project includes test suites for:
 ## Future Improvements
 - Chatrooms
     - Friends can chat realtime between each other
-    - Maybe collaborative tasks for a group
+    - Collaborative tasks needs commeting implemented
 - Suggestions
     - There could be a global section where users can search by category and the tasks can be displayed by most commented
-- Testing
-    - Unit tests for backend and frontend need to be integrated
+
 
 ## Diagrams
 ![Class diagram](./Documents/ER_livelyConnections.png)
