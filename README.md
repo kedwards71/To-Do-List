@@ -23,6 +23,8 @@ The following app is a to-do list with social features allowing friends to make 
 - Collaborative Group Tasks
     - Members of a room can now create tasks. These tasks can be edited by anyone. Only the task owner or the room owner are able to delete the tasks.
     Only the room owner can delete categories.
+- Chat Room Comments
+    - Users can now leave comments on tasks within the group
 
 
 ## Tech Stack
