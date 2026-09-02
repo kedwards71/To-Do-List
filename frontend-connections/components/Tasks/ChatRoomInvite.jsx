@@ -30,6 +30,8 @@ const ChatRoomInvite = ({
             try {
                 const response = await fetch(`${host || 'http://localhost:8123'}/chat/${room.room_id}`,requestOptions);
                 if (!response.ok){
+                if(response.status === 409)
+                    alert('This person already received an invite!');
                     const data = await response.json();
                     throw new Error(data.message || 'Error inviting member.');
                 }

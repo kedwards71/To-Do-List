@@ -35,6 +35,12 @@ router.post('/:room_id', authenticateToken, async(req,res) => {
         const roomExists = await pool.query(
             `SELECT * FROM chat_rooms where room_id = $1`, [req.params.room_id]
         );
+        const inviteExists = await pool.query(
+            `SELECT * FROM room_members WHERE room_id = $1 AND member_id = $2`,
+            [req.params.room_id, friend_id]
+        );
+        if (inviteExists.rows.length === 0)
+            return res.status(409).json({message:'Invite already sent!'});
         if (roomExists.rows.length === 0)
             return res.status(404).json({message: 'Room not found'});
         const personExists = await pool.query(
