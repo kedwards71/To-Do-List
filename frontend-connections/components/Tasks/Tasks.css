@@ -89,3 +89,27 @@
     height: 50%;
     overflow-y: auto;
 }
+
+.message-card-send {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-self: flex-end;
+    border: 1px solid;
+    background-color: purple;
+    border-radius: 20px;
+    padding: 10px;
+    color: white;
+}
+
+.message-card-receive{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-self: flex-start;
+    border: 1px solid;
+    background-color: rgb(110, 105, 139);
+    border-radius: 20px;
+    padding: 10px;
+    color: white;
+}

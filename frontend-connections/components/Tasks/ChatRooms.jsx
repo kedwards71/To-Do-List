@@ -8,7 +8,7 @@ import { GiExitDoor } from 'react-icons/gi';
 import { FaTrash } from "react-icons/fa";
 import { IoIosChatbubbles } from 'react-icons/io';
 import ChatRoomForm from "./ChatRoomForm";
-import ChatRoomMessages from "./ChatRoomMessages";
+import ChatRoomOptions from "./ChatRoomOptions";
 
 const ChatRooms = ({friends, selectedTab,setSelectedTab}) => {
 
@@ -235,7 +235,7 @@ const ChatRooms = ({friends, selectedTab,setSelectedTab}) => {
                 setRoomMembers={setRoomMembers}
                 friends={friends}
             />
-            <ChatRoomMessages
+            <ChatRoomOptions
                 showChatRoomMessages={showChatRoomMessages}
                 setShowChatRoomMessages={setShowChatRoomMessages}
                 selectedChatRoom={selectedChatRoom}
