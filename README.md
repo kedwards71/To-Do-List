@@ -65,7 +65,7 @@ This project includes test suites for:
 
 ## Diagrams
 ![Class diagram](./Documents/ER_livelyConnections.png)
-![ER Diagram](./Documents/Diagram2_livelyConnections.png)
+![ER Diagram](./Documents/ER%20DIAGRAM.drawio.png)
 
 ## Usage: Github Repository
 - https://github.com/kedwards71/To-Do-List
