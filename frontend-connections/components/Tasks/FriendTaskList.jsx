@@ -11,8 +11,10 @@ import Button from "react-bootstrap/esm/Button";
 import Nav from 'react-bootstrap/Nav'
 import { FaCommentAlt } from "react-icons/fa";
 import Comments from "./Comments.jsx";
+import { useNavigate } from "react-router-dom";
 
 const FriendTaskList = (({friend}) => {
+    const navigate = useNavigate();
     const [showTasks, setShowTasks] = useState(false);
     const [category, setCategory] = useState('');
     const [taskStatus, setTaskStatus] = useState(['All', 'Not started', 'In progress', 'Completed', 'Pending'])
@@ -121,6 +123,10 @@ const FriendTaskList = (({friend}) => {
         try{
             const response = await fetch(`${host || 'http://localhost:8123'}/friend/tasks/${friend.friend_id}`,requestOptions)
             if (!response.ok){
+                if(response.status === 403){
+                    navigate('/');
+                    return;
+                }
                 const data = await response.json();
                 throw new Error(data.message || 'Failure retrieving tasks.')
             }

@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import { useNavigate } from 'react-router-dom';
 const ChatRoomInvite = ({
     selectedChatRoom,
     showChatInviteForm,
     setShowChatInviteForm
 }) => {
+    const navigate = useNavigate();
     const [inviteList, setInviteList] = useState([]);
     const [friendUsername, setFriendUsername] = useState('');
     const host = import.meta.env.VITE_BACKEND 
@@ -30,8 +32,12 @@ const ChatRoomInvite = ({
             try {
                 const response = await fetch(`${host || 'http://localhost:8123'}/chat/${room.room_id}`,requestOptions);
                 if (!response.ok){
-                if(response.status === 409)
-                    alert(`The user '${invite.display_name}' has already received an invite!`);
+                    if(response.status === 409)
+                        alert(`The user '${invite.display_name}' has already received an invite!`);
+                    if(response.status === 403) {
+                        navigate('/');
+                        return;
+                    }
                     const data = await response.json();
                     throw new Error(data.message || 'Error inviting member.');
                 }

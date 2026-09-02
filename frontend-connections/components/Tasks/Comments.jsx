@@ -5,12 +5,14 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import TextAnalyze from './textAnalyze.jsx';
+import { useNavigate } from 'react-router-dom';
 
 
 
 
 
 const Comments = ({selectedTask,showComments,setShowComments}) => {
+    const navigate = useNavigate();
     const [commentList, setCommentList] = useState([]);
     const [comment, setComment] = useState({
         "comment_id" : 0,
@@ -50,6 +52,10 @@ const Comments = ({selectedTask,showComments,setShowComments}) => {
         try {
             const response = await fetch(`${host || 'http://localhost:8123'}/task/${payload.task_id}/comment`, requestOptions);
             if (!response.ok){
+                if(response.status === 403){
+                    navigate('/');
+                    return;
+                }
                 const data = await response.json();
                 throw new Error(data.message || 'Error creating comment');
             }
@@ -91,6 +97,10 @@ const Comments = ({selectedTask,showComments,setShowComments}) => {
         try {
             const response = await fetch(`${host || 'http://localhost:8123'}/task/comment/${comm.comment_id}`, requestOptions);
             if (!response.ok){
+                if(response.status === 403){
+                    navigate('/');
+                    return;
+                }
                 const data = await response.json();
                 throw new Error(data.message || 'Error deleting comment');
             }
@@ -113,6 +123,10 @@ const Comments = ({selectedTask,showComments,setShowComments}) => {
         try {
             const response = await fetch(`${host || 'http://localhost:8123'}/task/${tas.task_id}/comment`, requestOptions);
             if (!response.ok){
+                if(response.status === 403){
+                    navigate('/');
+                    return;
+                }
                 const data = await response.json();
                 throw new Error(data.message || 'Error fetching comments');
             }

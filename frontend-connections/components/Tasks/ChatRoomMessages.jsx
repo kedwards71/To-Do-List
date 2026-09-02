@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import Button from 'react-bootstrap/Button';
+import { useNavigate } from 'react-router-dom';
 const ChatRoomMessages = ({
     selectedChatRoom,
     setMessageList
 }) => {
+    const navigate = useNavigate();
     const socketRef = useRef(null);
     const reconnectTimeoutRef = useRef(null);
     const isUnmountingRef = useRef(false);
@@ -123,6 +125,14 @@ const ChatRoomMessages = ({
         try {
             const response = await fetch(`${host || 'http://localhost:8123'}/message/${selectedChatRoom.room_id}`, requestOptions);
             if (!response.ok){
+                if(response.status === 404) {
+                    setMessageList([]);
+                    return;
+                }
+                if(response.status === 403) {
+                    navigate('/');
+                    return;
+                }
                 const data = await response.json();
                 throw new Error(data.message || 'Error fetching messages');
             }

@@ -64,6 +64,10 @@ const Friends = () => {
         try {
             const response = await fetch(`${host || 'http://localhost:8123'}/friend/accept`,requestOptions);
             if (!response.ok){
+                if(response.status === 403){
+                    navigate('/');
+                    return;
+                }
                 const data = await response.json();
                 throw new Error(data.message || 'Error accepting friend request.')
             }
@@ -103,6 +107,10 @@ const Friends = () => {
         try {
             const response = await fetch(`${host || 'http://localhost:8123'}/friend/${frie.friend_id}`, requestOptions)
             if (!response.ok){
+                if(response.status === 403){
+                    navigate('/');
+                    return;
+                }
                 const data = await response.json();
                 throw new Error(data.message || 'Failed to remove friend');
             }
@@ -126,6 +134,10 @@ const Friends = () => {
         try {
             const response = await fetch(`${host || 'http://localhost:8123'}/friend`, requestOptions)
             if (!response.ok){
+                if(response.status === 403){
+                    navigate('/');
+                    return;
+                }
                 const data = await response.json();
                 throw new Error(data.message || 'Error retrieving friend list');
             }

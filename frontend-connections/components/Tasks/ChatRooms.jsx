@@ -9,9 +9,10 @@ import { FaTrash } from "react-icons/fa";
 import { IoIosChatbubbles } from 'react-icons/io';
 import ChatRoomForm from "./ChatRoomForm";
 import ChatRoomOptions from "./ChatRoomOptions";
+import { useNavigate } from "react-router-dom";
 
 const ChatRooms = ({friends, selectedTab,setSelectedTab}) => {
-
+    const navigate = useNavigate();
     const [chatRooms, setChatRooms] = useState([]);
     const [showChatForm, setShowChatForm] = useState(false);
     const [showChatRoomMessages, setShowChatRoomMessages] = useState(false);
@@ -56,6 +57,10 @@ const ChatRooms = ({friends, selectedTab,setSelectedTab}) => {
         try {
             const response = await fetch(`${host || 'http://localhost:8123'}/chat/${room.room_id}/accept`,requestOptions);
             if (!response.ok){
+                if(response.status === 403){
+                    navigate('/');
+                    return;
+                }
                 const data = await response.json();
                 throw new Error(data.message || 'Error accepting invitation');
             }
@@ -79,6 +84,10 @@ const ChatRooms = ({friends, selectedTab,setSelectedTab}) => {
         try {
             const response = await fetch(`${host || 'http://localhost:8123'}/chat`, requestOptions)
             if (!response.ok){
+                if(response.status === 403){
+                    navigate('/');
+                    return;
+                }
                 const data = await response.json();
                 throw new Error(data.message || 'Error fetching chat rooms');
             }
@@ -101,6 +110,10 @@ const ChatRooms = ({friends, selectedTab,setSelectedTab}) => {
         try {
             const response = await fetch(`${host || 'http://localhost:8123'}/chat/${room.room_id}`,requestOptions);
             if (!response.ok){
+                    if(response.status === 403){
+                    navigate('/');
+                    return;
+                }
                 const data = await response.json();
                 throw new Error(data.message || 'Error Deleting room');
             }

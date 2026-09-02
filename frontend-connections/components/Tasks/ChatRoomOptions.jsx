@@ -82,6 +82,11 @@ const ChatRoomOptions = ({
             {
                 if(response.status === 403)
                     navigate('/');
+                if(response.status === 404)
+                {
+                    setTaskList([]);
+                    setCategoryList([]);
+                }
                 const data = await response.json();
                 throw new Error(data.message || 'Failure to retrieve tasks');
             }

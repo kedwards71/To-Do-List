@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import { useNavigate } from 'react-router-dom';
 
 const ChatRoomMessagesTaskForm = ({
     task,
@@ -18,6 +19,7 @@ const ChatRoomMessagesTaskForm = ({
     setTaskList,
     filteredMembers
 }) => {
+    const navigate = useNavigate();
     const creator = filteredMembers.find(f => f.member_id === selectedTask.created_by);
     const updator = filteredMembers.find(f => f.member_id === selectedTask.updated_by);
     const host = import.meta.env.VITE_BACKEND 
@@ -48,6 +50,10 @@ const ChatRoomMessagesTaskForm = ({
         try {
             const response = await fetch(`${host || 'http://localhost:8123'}/room/task`,requestOptions);
             if (!response.ok){
+                if(response.status === 403){
+                    navigate('/');
+                    return;
+                }
                 const data = await response.json();
                 throw new Error(data.message || 'Error creating task.');
             }
@@ -92,6 +98,10 @@ const ChatRoomMessagesTaskForm = ({
         try {
             const response = await fetch(`${host || 'http://localhost:8123'}/room/task/${selectedTask.task_id}`,requestOptions)
             if (!response.ok){
+                if(response.status === 403){
+                    navigate('/');
+                    return;
+                }
                 const data = await response.json();
                 throw new Error(data.message || 'Error updating task')
             }

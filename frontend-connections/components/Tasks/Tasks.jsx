@@ -153,6 +153,10 @@ const Tasks = () => {
         try {
             const response = await fetch(`${host || 'http://localhost:8123'}/task/accept/${tas.task_id}`, requestOptions);
             if (!response.ok){
+                if(response.status === 403){
+                    navigate('/');
+                    return;
+                }
                 const data = await response.json();
                 throw new Error(data.message || 'Failure acceptiing task');
             }
@@ -179,6 +183,10 @@ const Tasks = () => {
             const response = await fetch(`${host || 'http://localhost:8123'}/task/${tas.task_id}`, requestOptions);
             if (!response.ok)
             {
+                if(response.status === 403){
+                    navigate('/');
+                    return;
+                }
                 const data = await response.json();
                 throw new Error(data.message || "Failed to delete task");
             }

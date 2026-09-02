@@ -1,6 +1,7 @@
 import React from "react";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import { useNavigate } from "react-router-dom";
 
 const FriendForms = ({
         showFriendForm,
@@ -11,7 +12,7 @@ const FriendForms = ({
         setShowUpdateDisplay,
         friendsList
     }) => {
-
+    const navigate = useNavigate();
     const host = import.meta.env.VITE_BACKEND 
     || 
         import.meta.env.VITE_HOST 
@@ -48,6 +49,10 @@ const FriendForms = ({
             const response = await fetch(`${host || 'http://localhost:8123'}/friend`,requestOptions);
             if (!response.ok){
                 const data = await response.json();
+                if(response.status === 403){
+                    navigate('/');
+                    return;
+                }
                 if(response.status === 409){
                     alert('You already sent this person a request');
                 }
@@ -78,6 +83,10 @@ const FriendForms = ({
         try {
             const response = await fetch(`${host || 'http://localhost:8123'}/friend/${friend.friend_id}`, requestOptions)
             if (!response.ok){
+                if(response.status === 403){
+                    navigate('/');
+                    return;
+                }
                 const data = await response.json();
                 throw new Error(data.message || 'Error updating display name');
             }

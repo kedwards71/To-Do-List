@@ -42,6 +42,10 @@ const ChatRoomForm = ({
         try {
             const response = await fetch(`${host || 'http://localhost:8123'}/chat`,requestOptions);
             if (!response.ok){
+                if(response.status === 403){
+                    navigate('/');
+                    return;
+                }
                 const data = await response.json();
                 throw new Error(data.message || 'Error creating room.');
             }
