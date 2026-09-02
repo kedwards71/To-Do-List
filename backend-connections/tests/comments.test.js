@@ -1,11 +1,13 @@
 import request from 'supertest';
 import app from '../index.js';
 import 'dotenv/config';
+import jwt from 'jsonwebtoken';
 
 describe('[GET,POST,PUT,DELETE] (protected)', () => {
     let token;
     let token2;
     let targetId;
+    let targetNum;
 
     beforeAll(async () =>{
         const res = await request(app)
@@ -17,25 +19,32 @@ describe('[GET,POST,PUT,DELETE] (protected)', () => {
             .post('/login')
             .send({username: 'TheBlueJay', password: '1234'});
         token2 = res2.body.token;
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const res3 = await request(app)
+            .post('/task')
+            .set('Authorization', `Bearer ${token}`)
+            .send({task_title: 'Test Task', task_description: 'This is a test task', created_by: decoded.id, owner_id: decoded.id});
+        targetNum = res3.body.task_id;
     });
 
     it('should succeed with a status of 200 if the task exists', async () =>{
         const res = await request(app)
-            .get('/task/76/comment')
+            .get(`/task/${targetNum}/comment`)
             .set('Authorization', `Bearer ${token}`)
         expect(res.statusCode).toBe(200);
     });
 
     it('should fail with a 403 if invalid token', async () => {
         const res = await request(app)
-            .get('/task/76/comment')
+            .get(`/task/77897089/comment`)
             .set('Authorization', `Bearer fakeToken`)
         expect(res.statusCode).toBe(403);
     });
 
     it('should return a 404 if task not found', async () => {
         const res = await request(app)
-            .post('/task/93332/comment')
+            .post(`/task/8974509/comment`)
             .set('Authorization', `Bearer ${token}`)
             .send({task_comment:'This is a test comment'});
         expect(res.statusCode).toBe(404);
@@ -43,7 +52,7 @@ describe('[GET,POST,PUT,DELETE] (protected)', () => {
 
     it('should succeed with a valid token and return a 201 code because this is the owner of the task', async () => {
         const res = await request(app)
-            .post(`/task/${76}/comment`)
+            .post(`/task/${targetNum}/comment`)
             .set('Authorization', `Bearer ${token}`)
             .send({task_comment:'This is a test comment'});
         expect(res.statusCode).toBe(201);
@@ -52,7 +61,7 @@ describe('[GET,POST,PUT,DELETE] (protected)', () => {
 
     it('should fail with a status code of 403 because the user is not a mutal friend of the owner', async () => {
         const res = await request(app)
-            .post('/task/76/comment')
+            .post(`/task/${targetNum}/comment`)
             .set('Authorization', `Bearer ${token2}`)
             .send({task_comment: 'This is another test comment'});
         expect(res.statusCode).toBe(403);
