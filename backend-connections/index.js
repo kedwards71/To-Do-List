@@ -8,6 +8,7 @@ import friendRouter from './routes/friends.js';
 import authRouter from './routes/login.js';
 import chatRouter from './routes/chatRooms.js';
 import roomRouter from './routes/roomTasks.js';
+import messageRouter from './routes/message.js';
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -25,6 +26,7 @@ app.use('/login', authRouter);
 app.use('/friend',friendRouter);
 app.use('/chat', chatRouter);
 app.use('/room', roomRouter);
+app.use('/message', messageRouter);
 
 const server = http.createServer(app);
 

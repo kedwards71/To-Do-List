@@ -94,7 +94,7 @@ router.delete('/', authenticateToken, async (req, res) => {
         return res.status(500).send({message: 'Server error'});
     }
 });
-
+// Delete a specific task for a room
 router.delete('/task/:task_id', authenticateToken, async (req,res) => {
     try {
         const result = await pool.query(
@@ -152,7 +152,7 @@ router.post('/task/:task_id/comment', authenticateToken, async (req, res) => {
     }
 
 });
-
+// Delete Comment from a task
 router.delete('/task/comment/:comment_id', authenticateToken, async (req,res) =>{
     try {
         const result = await pool.query(
