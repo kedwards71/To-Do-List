@@ -27,6 +27,8 @@ The following app is a to-do list with social features allowing friends to make 
     - Users can now leave comments on tasks within the group
 - Chat Room Messaging
     - Users can now create and view messages inside a room
+- Live Messaging
+    - Web Socket Connections allow users to chat in real time
 
 
 ## Tech Stack
@@ -57,9 +59,6 @@ This project includes test suites for:
     - npm test
 
 ## Future Improvements
-- Chatrooms
-    - Friends can chat realtime between each other
-        - Right now web sockets have not been implemented
 - Suggestions
     - There could be a global section where users can search by category and the tasks can be displayed by most commented
 
@@ -104,3 +103,4 @@ I made this project with consultation from **Microsoft Copilot**. I had ideas of
     - Industry Standards
     - Debugging
     - Deployment process
+Another AI agent I used was **Github Copilot** it helped me implement websocket, as well as security validation for it.
