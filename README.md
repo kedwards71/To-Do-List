@@ -64,7 +64,7 @@ This project includes test suites for:
 
 
 ## Diagrams
-![Class diagram](./Documents/ER_livelyConnections.png)
+![Class diagram](./Documents/Class%20Diagram.drawio.png)
 ![ER Diagram](./Documents/ER%20DIAGRAM.drawio.png)
 
 ## Usage: Github Repository
