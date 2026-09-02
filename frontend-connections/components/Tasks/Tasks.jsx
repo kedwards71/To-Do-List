@@ -9,8 +9,8 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Modal from 'react-bootstrap/Modal';
 import { IoMdAdd } from "react-icons/io";
 import { FaMinus, FaEdit, FaCommentAlt } from "react-icons/fa";
-import Friends from './Friends.jsx';
-import Comments from './Comments.jsx';
+import Friends from './Friends/Friends.jsx';
+import Comments from './Comments/Comments.jsx';
 import { useNavigate } from 'react-router-dom';
 
 const Tasks = () => {

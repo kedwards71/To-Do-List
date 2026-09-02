@@ -10,7 +10,7 @@ import { FaMinus } from "react-icons/fa";
 import Button from "react-bootstrap/esm/Button";
 import Nav from 'react-bootstrap/Nav'
 import { FaCommentAlt } from "react-icons/fa";
-import Comments from "./Comments.jsx";
+import Comments from "../Comments/Comments.jsx";
 import { useNavigate } from "react-router-dom";
 
 const FriendTaskList = (({friend}) => {

@@ -9,7 +9,7 @@ import { FaUserEdit } from "react-icons/fa";
 import FriendTaskList from './FriendTaskList';
 import FriendForms from './FriendForms';
 import { useNavigate } from 'react-router-dom';
-import ChatRooms from './ChatRooms';
+import ChatRooms from '../ChatRooms/ChatRooms';
 
 
 

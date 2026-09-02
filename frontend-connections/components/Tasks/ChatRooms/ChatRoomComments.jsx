@@ -4,7 +4,7 @@ import Toast from 'react-bootstrap/Toast';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import TextAnalyze from './textAnalyze.jsx';
+import TextAnalyze from '../Comments/textAnalyze.jsx';
 import { useNavigate } from 'react-router-dom';
 
 
