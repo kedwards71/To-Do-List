@@ -35,12 +35,11 @@ const ChatRoomInvite = ({
                     const data = await response.json();
                     throw new Error(data.message || 'Error inviting member.');
                 }
-                const data = await response.json();
-                setInviteList([]);
             } catch (error) {
                 console.error('Error: ', error);
             }
         });
+        setInviteList([]);
     };
 
     const handleAddUsername = async () => {
