@@ -138,7 +138,7 @@ const ChatRoomComments = ({
     useEffect(() => {
         if(selectedTask.task_id)
             getComments(selectedTask);
-    }, [showCommentForm, selectedTask]);
+    }, [showCommentForm, selectedTask.task_id]);
   return (
     <span>
                 <Offcanvas style={{zIndex:'9999'}}  show={showComments} placement='bottom' onHide={() => setShowComments(false)} >
