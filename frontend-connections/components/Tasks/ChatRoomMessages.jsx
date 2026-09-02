@@ -1,10 +1,56 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Button from 'react-bootstrap/Button';
 const ChatRoomMessages = ({
     selectedChatRoom,
-    messageList,
     setMessageList
 }) => {
+    const socketRef = useRef(null);
+    const reconnectTimeoutRef = useRef(null);
+    const isUnmountingRef = useRef(false);
+    const connectionGenerationRef = useRef(0);
+
+    const connectWebSocket = () => {
+        if (isUnmountingRef.current) {
+            return;
+        }
+
+        const connectionGeneration = connectionGenerationRef.current;
+        const socketUrl = new URL(wsHost);
+        socketUrl.pathname = `${socketUrl.pathname.replace(/\/$/, '')}/ws`;
+        socketUrl.searchParams.set('token', sessionStorage.getItem('Bearer'));
+        socketRef.current = new WebSocket(socketUrl);
+
+        socketRef.current.onopen = () => {
+            console.log('Connected');
+
+            socketRef.current?.send(
+                JSON.stringify({
+                    type: 'join_room',
+                    room_id: selectedChatRoom.room_id
+                })
+            );
+        }
+
+        socketRef.current.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+
+            console.log(data);
+
+            if (data.type === 'new_message' && data.message.room_id === selectedChatRoom.room_id){
+                setMessageList(prev => [...prev, data.message]);
+            }
+        };
+
+
+        socketRef.current.onclose = () => {
+            if (!isUnmountingRef.current && connectionGeneration === connectionGenerationRef.current) {
+                console.log('Reconnecting...');
+                reconnectTimeoutRef.current = setTimeout(connectWebSocket, 3000);
+            }
+        };
+    };
+
+
     const userInfo = JSON.parse(sessionStorage.getItem('token'));
     const [message, setMessage] = useState({
         'message_id' : 0,
@@ -20,6 +66,8 @@ const ChatRoomMessages = ({
     import.meta.env.VITE_HOST 
     || 
       `http://localhost:8123`;
+
+    const wsHost = import.meta.env.VITE_WS || `ws://localhost:8123`;
 
     const handleMessageSend = async () => {
         const requestOptions = {
@@ -41,7 +89,16 @@ const ChatRoomMessages = ({
                 ...data.message,
                 'member_display_name' : data.name
             };
-            setMessageList([...messageList, newEntry]);
+            if (socketRef.current?.readyState !== WebSocket.OPEN) {
+                throw new Error('Message connection is not ready');
+            }
+            socketRef.current.send(
+                JSON.stringify({
+                    type: 'new_message',
+                    room_id : selectedChatRoom.room_id,
+                    message: newEntry
+                })
+            );
             setMessage({
                 'message_id' : 0,
                 'room_id' : selectedChatRoom.room_id,
@@ -78,7 +135,26 @@ const ChatRoomMessages = ({
 
     useEffect(() => {
         getMessages();
-    },[selectedChatRoom.room_id, messageList.length])
+    },[selectedChatRoom.room_id])
+
+    useEffect(() => {
+        connectionGenerationRef.current += 1;
+        isUnmountingRef.current = false;
+        connectWebSocket();
+
+        return () => {
+            isUnmountingRef.current = true;
+            connectionGenerationRef.current += 1;
+            clearTimeout(reconnectTimeoutRef.current);
+
+            if (socketRef.current?.readyState === WebSocket.OPEN) {
+                socketRef.current.send(JSON.stringify({ type: 'leave_room' }));
+            }
+            socketRef.current?.close();
+            socketRef.current = null;
+        };
+
+    },[selectedChatRoom.room_id]);
 
     return (
         <>

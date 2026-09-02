@@ -7,13 +7,14 @@ const router = Router();
 router.post('/', authenticateToken, async (req,res) => {
     const {
         room_id,
-        messenger_id,
         message_content
     } = req.body
+    const messenger_id = req.user.id;
 
     try {
         const isMember = await pool.query(
-            `SELECT * FROM room_members WHERE room_id = $1 AND member_id = $2`,
+            `SELECT * FROM room_members
+             WHERE room_id = $1 AND member_id = $2 AND member_accept = true`,
             [room_id,messenger_id]
         )
         if (isMember.rows.length === 0){
@@ -33,6 +34,15 @@ router.post('/', authenticateToken, async (req,res) => {
 
 router.get('/:room_id', authenticateToken, async(req,res) => {
     try{
+        const isMember = await pool.query(
+            `SELECT 1 FROM room_members
+             WHERE room_id = $1 AND member_id = $2 AND member_accept = true`,
+            [req.params.room_id, req.user.id]
+        );
+        if (isMember.rows.length === 0) {
+            return res.status(403).json({message:'Unauthorized access.'});
+        }
+
         const result = await pool.query(
             `SELECT
             m.message_id,

@@ -303,8 +303,10 @@ const ChatRoomOptions = ({
                                     <strong>{message.member_display_name}</strong>
                                     <span style={{marginLeft:'20px'}}>{new Date(message.sent_at).toLocaleString()}</span>
 
-                                </div><br/>
-                                {message.message_content}
+                                </div>
+                                <div>
+                                    {message.message_content}
+                                </div>
                             </div>
                             )
                         })}
