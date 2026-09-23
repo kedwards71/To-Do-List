@@ -1,0 +1,34 @@
+{
+    "sqltools.connections": [
+        {
+            "pgOptions": {
+                "ssl": {
+                    "rejectUnauthorized": true
+                }
+            },
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "dpg-da5k40rm8hqs73d05cmg-a.virginia-postgres.render.com",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "Render",
+            "username": "lively_connections_user",
+            "database": "lively_connections"
+        },
+        {
+            "pgOptions": {
+                "ssl": {
+                    "rejectUnauthorized": true
+                }
+            },
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "dpg-dapj64o473hc73bt6u0g-a.virginia-postgres.render.com",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "renderDB2",
+            "database": "todo_postgres_4pjl",
+            "username": "todo_postgres_4pjl_user"
+        }
+    ]
+}

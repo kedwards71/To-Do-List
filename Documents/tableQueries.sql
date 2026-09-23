@@ -169,8 +169,8 @@
 -- drop table room_tasks
 -- drop table room_task_comments
 
--- SELECT * FROM users;
+SELECT * FROM users;
 --  SELECT * FROM tasks WHERE owner_id = 4;
- SELECT * FROM task_comments
+--  SELECT * FROM task_comments;
 --  SELECT * FROM friend_list
 --  SELECT * FROM chat_rooms
